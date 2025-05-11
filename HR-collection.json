@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "d78e2f1a-4b23-48c5-9a56-83e4b7c91234",
+		"name": "Module HR",
+		"description": "Collection pour le module HR (Ressources Humaines)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Créer un membre du personnel",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\": \"Marie\",\n    \"lastName\": \"Dupont\",\n    \"email\": \"marie.dupont@medical.example.com\",\n    \"phone\": \"+33712345678\",\n    \"role\": \"DOCTOR\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"hireDate\": \"2023-01-15\",\n    \"employmentType\": \"FULL_TIME\",\n    \"workingHoursPerWeek\": 35,\n    \"address\": {\n        \"line1\": \"45 Avenue de la République\",\n        \"postalCode\": \"75011\",\n        \"city\": \"Paris\",\n        \"country\": \"France\"\n    },\n    \"socialSecurityNumber\": \"1234567890123\",\n    \"bankDetails\": {\n        \"iban\": \"FR7630006000011234567890189\",\n        \"bic\": \"BNPAFRPP\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/staff",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"staff"
+					]
+				},
+				"description": "Créer un nouveau membre du personnel"
+			},
+			"response": []
+		},
+		{
+			"name": "Créer un shift",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"staffId\": \"STAFF123456\",\n    \"startAt\": \"2023-11-20T08:00:00Z\",\n    \"endAt\": \"2023-11-20T16:00:00Z\",\n    \"location\": \"MAIN_CLINIC\",\n    \"department\": \"GENERAL_MEDICINE\",\n    \"notes\": \"Consultation et suivi patients\",\n    \"breakDuration\": 60\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/shifts",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"shifts"
+					]
+				},
+				"description": "Créer un horaire de travail (shift) pour un membre du personnel"
+			},
+			"response": []
+		},
+		{
+			"name": "Créer une demande de congé",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"staffId\": \"STAFF123456\",\n    \"startDate\": \"2023-12-24\",\n    \"endDate\": \"2023-12-31\",\n    \"type\": \"ANNUAL_LEAVE\",\n    \"reason\": \"Congés de fin d'année\",\n    \"replacementStaffId\": \"STAFF789012\",\n    \"notes\": \"Tous les patients ont été répartis entre les autres médecins\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/leave-requests",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"leave-requests"
+					]
+				},
+				"description": "Créer une demande de congé"
+			},
+			"response": []
+		},
+		{
+			"name": "Approuver une demande de congé",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"approved\": true,\n    \"approvedById\": \"STAFF456789\",\n    \"approvalNotes\": \"Demande approuvée, le remplacement est bien organisé\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/leave-requests/{{id}}/approve",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"leave-requests",
+						"{{id}}",
+						"approve"
+					]
+				},
+				"description": "Approuver ou rejeter une demande de congé"
+			},
+			"response": []
+		},
+		{
+			"name": "Exporter la paie",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/payroll/{{period}}/export",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"payroll",
+						"{{period}}",
+						"export"
+					]
+				},
+				"description": "Exporter les données de paie pour une période donnée (format: YYYY-MM)"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.medical.example.com/v1",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "votre_token_jwt_ici",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": "LR123456",
+			"type": "string"
+		},
+		{
+			"key": "period",
+			"value": "2023-11",
+			"type": "string"
+		}
+	]
+} 

@@ -1,0 +1,103 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input CreateMedicalHistoryItemDto {
+  label: String!
+  note: String!
+  patientId: String!
+  type: String!
+}
+
+input CreatePatientDto {
+  address: String!
+  bloodType: String
+  clinicId: String!
+  dob: DateTime!
+  email: String
+  firstName: String!
+  gender: String!
+  lastName: String!
+  mrn: String!
+  phone: String
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type MedicalHistoryItem {
+  id: String!
+  label: String!
+  note: String!
+  patientId: String!
+  recordedAt: DateTime!
+  type: String!
+}
+
+type Mutation {
+  addMedicalHistoryItem(clinicId: String!, input: CreateMedicalHistoryItemDto!): MedicalHistoryItem!
+  archivePatient(clinicId: String!, id: String!): Boolean!
+  createPatient(input: CreatePatientDto!): Patient!
+  removeDocument(clinicId: String!, id: String!): Boolean!
+  removeMedicalHistoryItem(clinicId: String!, id: String!): Boolean!
+  updatePatient(clinicId: String!, id: String!, input: UpdatePatientDto!): Patient!
+}
+
+type Patient {
+  address: String!
+  bloodType: String
+  clinicId: String!
+  createdAt: DateTime!
+  deletedAt: DateTime
+  dob: DateTime!
+  email: String
+  firstName: String!
+  gender: String!
+  id: String!
+  lastName: String!
+  mrn: String!
+  phone: String
+  updatedAt: DateTime!
+}
+
+type Query {
+  patient(clinicId: String!, id: String!): Patient!
+  patientDocuments(clinicId: String!, patientId: String!): [ScannedDocument!]!
+  patientMedicalHistory(clinicId: String!, patientId: String!): [MedicalHistoryItem!]!
+  patients(clinicId: String!): [Patient!]!
+  searchPatients(input: SearchPatientDto!): [Patient!]!
+}
+
+type ScannedDocument {
+  docType: String!
+  id: String!
+  path: String!
+  patientId: String!
+  tags: [String!]!
+  uploadedAt: DateTime!
+  uploadedBy: String!
+}
+
+input SearchPatientDto {
+  clinicId: String
+  email: String
+  firstName: String
+  gender: String
+  lastName: String
+  mrn: String
+  phone: String
+  search: String
+}
+
+input UpdatePatientDto {
+  address: String
+  bloodType: String
+  dob: DateTime
+  email: String
+  firstName: String
+  gender: String
+  lastName: String
+  phone: String
+}
