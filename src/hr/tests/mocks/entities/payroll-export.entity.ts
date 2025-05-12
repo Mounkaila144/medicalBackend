@@ -27,7 +27,7 @@ export class PayrollExport {
   filePath: string;
 
   @Field()
-  @Column({ type: 'datetime' })
+  @Column({ type: 'timestamp' })
   generatedAt: Date;
 
   @Field()

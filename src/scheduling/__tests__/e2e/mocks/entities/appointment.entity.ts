@@ -35,10 +35,10 @@ export class Appointment {
   })
   status: string;
 
-  @Column({ name: 'start_at', type: 'datetime' })
+  @Column({ name: 'start_at', type: 'timestamp' })
   startAt: Date;
 
-  @Column({ name: 'end_at', type: 'datetime' })
+  @Column({ name: 'end_at', type: 'timestamp' })
   endAt: Date;
 
   @Column({ nullable: true })
