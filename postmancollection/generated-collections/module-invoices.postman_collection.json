@@ -1,0 +1,200 @@
+{
+  "info": {
+    "_postman_id": "d611f6eb-abf2-4551-b7e2-6e32ca4f4cf3",
+    "name": "Module Invoices - Medical",
+    "description": "Collection complète pour le module invoices du système médical",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Invoices",
+      "item": [
+        {
+          "name": "Créer une facture",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.environment.set('invoiceId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": \"{{patientId}}\",\n  \"lines\": [\n    {\n      \"tariffCode\": \"CONS\",\n      \"quantity\": 1,\n      \"unitPrice\": 50,\n      \"description\": \"Consultation générale\"\n    }\n  ],\n  \"billingAddress\": {\n    \"name\": \"Jean Dupont\",\n    \"street\": \"123 Rue de la Paix\",\n    \"city\": \"Paris\",\n    \"postalCode\": \"75001\",\n    \"country\": \"France\"\n  }\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lister les factures",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtenir une facture",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modifier une facture",
+          "event": [],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Envoyer une facture",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/send",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "send"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Télécharger PDF facture",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/invoices/:id/pdf",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "invoices",
+                ":id",
+                "pdf"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,454 +1,454 @@
 {
-	"info": {
-		"_postman_id": "d4a76f54-d8c6-4e65-a6c7-2e45f9a6b1de",
-		"name": "Module Scheduling - Medical",
-		"description": "Collection pour le module de planification du monolithe NestJS Medical",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Practitioners",
-			"item": [
-				{
-					"name": "Create Practitioner",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = pm.response.json();",
-									"if (jsonData && jsonData.id) {",
-									"    pm.environment.set('practitionerId', jsonData.id);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{accessToken}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"email\": \"pierre.martin@clinique.fr\",\n    \"phoneNumber\": \"0612345678\",\n    \"workingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"17:00\" }\n            ]\n        }\n    ],\n    \"slotDuration\": 20,\n    \"color\": \"#4285F4\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/practitioners",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"practitioners"
-							]
-						},
-						"description": "Crée un nouveau praticien avec ses horaires de travail."
-					},
-					"response": [
-						{
-							"name": "201 - Créé",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{accessToken}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"email\": \"pierre.martin@clinique.fr\",\n    \"phoneNumber\": \"0612345678\",\n    \"workingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"17:00\" }\n            ]\n        }\n    ],\n    \"slotDuration\": 20,\n    \"color\": \"#4285F4\"\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/practitioners",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"practitioners"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [],
-							"cookie": [],
-							"body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"email\": \"pierre.martin@clinique.fr\",\n    \"phoneNumber\": \"0612345678\",\n    \"workingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"17:00\" }\n            ]\n        }\n    ],\n    \"slotDuration\": 20,\n    \"color\": \"#4285F4\",\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T10:00:00.000Z\",\n    \"updatedAt\": \"2023-06-15T10:00:00.000Z\"\n}"
-						},
-						{
-							"name": "401 - Non authentifié",
-							"originalRequest": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "{{baseUrl}}/practitioners",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"practitioners"
-									]
-								}
-							},
-							"status": "Unauthorized",
-							"code": 401,
-							"_postman_previewlanguage": "json",
-							"header": [],
-							"cookie": [],
-							"body": "{\n    \"statusCode\": 401,\n    \"message\": \"Non authentifié\",\n    \"error\": \"Unauthorized\"\n}"
-						},
-						{
-							"name": "400 - Validation échouée",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{accessToken}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"INVALID_SPECIALITY\"\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/practitioners",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"practitioners"
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [],
-							"cookie": [],
-							"body": "{\n    \"statusCode\": 400,\n    \"message\": [\"La spécialité doit être une valeur valide\"],\n    \"error\": \"Bad Request\"\n}"
-						}
-					]
-				}
-			]
-		},
-		{
-			"name": "Appointments",
-			"item": [
-				{
-					"name": "Create Appointment",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = pm.response.json();",
-									"if (jsonData && jsonData.id) {",
-									"    pm.environment.set('appointmentId', jsonData.id);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{accessToken}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"practitionerId\": \"{{practitionerId}}\",\n    \"patientId\": \"{{patientId}}\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"SCHEDULED\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/appointments",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"appointments"
-							]
-						},
-						"description": "Crée un nouveau rendez-vous entre un praticien et un patient."
-					},
-					"response": [
-						{
-							"name": "201 - Créé",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{accessToken}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"SCHEDULED\"\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/appointments",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"appointments"
-									]
-								}
-							},
-							"status": "Created",
-							"code": 201,
-							"_postman_previewlanguage": "json",
-							"header": [],
-							"cookie": [],
-							"body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440200\",\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00.000Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00.000Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"SCHEDULED\",\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T11:00:00.000Z\",\n    \"updatedAt\": \"2023-06-15T11:00:00.000Z\"\n}"
-						},
-						{
-							"name": "400 - Conflit horaire",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{accessToken}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"status\": \"SCHEDULED\"\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/appointments",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"appointments"
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [],
-							"cookie": [],
-							"body": "{\n    \"statusCode\": 400,\n    \"message\": \"Le créneau horaire n'est pas disponible\",\n    \"error\": \"Bad Request\"\n}"
-						},
-						{
-							"name": "404 - Praticien ou patient non trouvé",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{accessToken}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655449999\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"status\": \"SCHEDULED\"\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/appointments",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"appointments"
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [],
-							"cookie": [],
-							"body": "{\n    \"statusCode\": 404,\n    \"message\": \"Praticien non trouvé\",\n    \"error\": \"Not Found\"\n}"
-						}
-					]
-				},
-				{
-					"name": "Cancel Appointment",
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Authorization",
-								"value": "Bearer {{accessToken}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/appointments/{{appointmentId}}/cancel",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"appointments",
-								"{{appointmentId}}",
-								"cancel"
-							]
-						},
-						"description": "Annule un rendez-vous existant."
-					},
-					"response": [
-						{
-							"name": "200 - Succès",
-							"originalRequest": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{accessToken}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/appointments/550e8400-e29b-41d4-a716-446655440200/cancel",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"appointments",
-										"550e8400-e29b-41d4-a716-446655440200",
-										"cancel"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [],
-							"cookie": [],
-							"body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440200\",\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00.000Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00.000Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"CANCELLED\",\n    \"cancellationReason\": \"Patient indisponible\",\n    \"cancellationDate\": \"2023-06-15T12:00:00.000Z\",\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T11:00:00.000Z\",\n    \"updatedAt\": \"2023-06-15T12:00:00.000Z\"\n}"
-						},
-						{
-							"name": "404 - Rendez-vous non trouvé",
-							"originalRequest": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{accessToken}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/appointments/550e8400-e29b-41d4-a716-446655449999/cancel",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"appointments",
-										"550e8400-e29b-41d4-a716-446655449999",
-										"cancel"
-									]
-								}
-							},
-							"status": "Not Found",
-							"code": 404,
-							"_postman_previewlanguage": "json",
-							"header": [],
-							"cookie": [],
-							"body": "{\n    \"statusCode\": 404,\n    \"message\": \"Rendez-vous non trouvé\",\n    \"error\": \"Not Found\"\n}"
-						},
-						{
-							"name": "400 - Déjà annulé",
-							"originalRequest": {
-								"method": "PATCH",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Authorization",
-										"value": "Bearer {{accessToken}}"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
-								},
-								"url": {
-									"raw": "{{baseUrl}}/appointments/550e8400-e29b-41d4-a716-446655440200/cancel",
-									"host": [
-										"{{baseUrl}}"
-									],
-									"path": [
-										"appointments",
-										"550e8400-e29b-41d4-a716-446655440200",
-										"cancel"
-									]
-								}
-							},
-							"status": "Bad Request",
-							"code": 400,
-							"_postman_previewlanguage": "json",
-							"header": [],
-							"cookie": [],
-							"body": "{\n    \"statusCode\": 400,\n    \"message\": \"Ce rendez-vous est déjà annulé\",\n    \"error\": \"Bad Request\"\n}"
-						}
-					]
-				}
-			]
-		}
-	]
-} 
+  "info": {
+    "_postman_id": "d4a76f54-d8c6-4e65-a6c7-2e45f9a6b1de",
+    "name": "Module Scheduling - Medical",
+    "description": "Collection pour le module de planification du monolithe NestJS Medical",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Practitioners",
+      "item": [
+        {
+          "name": "Create Practitioner",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.id) {",
+                  "    pm.environment.set('practitionerId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"email\": \"pierre.martin@clinique.fr\",\n    \"phoneNumber\": \"0612345678\",\n    \"workingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"17:00\" }\n            ]\n        }\n    ],\n    \"slotDuration\": 20,\n    \"color\": \"#4285F4\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/practitioners",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "practitioners"
+              ]
+            },
+            "description": "Crée un nouveau praticien avec ses horaires de travail."
+          },
+          "response": [
+            {
+              "name": "201 - Créé",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"email\": \"pierre.martin@clinique.fr\",\n    \"phoneNumber\": \"0612345678\",\n    \"workingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"17:00\" }\n            ]\n        }\n    ],\n    \"slotDuration\": 20,\n    \"color\": \"#4285F4\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/practitioners",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "practitioners"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"email\": \"pierre.martin@clinique.fr\",\n    \"phoneNumber\": \"0612345678\",\n    \"workingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"17:00\" }\n            ]\n        }\n    ],\n    \"slotDuration\": 20,\n    \"color\": \"#4285F4\",\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T10:00:00.000Z\",\n    \"updatedAt\": \"2023-06-15T10:00:00.000Z\"\n}"
+            },
+            {
+              "name": "401 - Non authentifié",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/practitioners",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "practitioners"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"statusCode\": 401,\n    \"message\": \"Non authentifié\",\n    \"error\": \"Unauthorized\"\n}"
+            },
+            {
+              "name": "400 - Validation échouée",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"INVALID_SPECIALITY\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/practitioners",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "practitioners"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"statusCode\": 400,\n    \"message\": [\"La spécialité doit être une valeur valide\"],\n    \"error\": \"Bad Request\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Appointments",
+      "item": [
+        {
+          "name": "Create Appointment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.id) {",
+                  "    pm.environment.set('appointmentId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"practitionerId\": \"{{practitionerId}}\",\n    \"patientId\": \"{{patientId}}\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"SCHEDULED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/appointments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointments"
+              ]
+            },
+            "description": "Crée un nouveau rendez-vous entre un praticien et un patient."
+          },
+          "response": [
+            {
+              "name": "201 - Créé",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"SCHEDULED\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/appointments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440200\",\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00.000Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00.000Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"SCHEDULED\",\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T11:00:00.000Z\",\n    \"updatedAt\": \"2023-06-15T11:00:00.000Z\"\n}"
+            },
+            {
+              "name": "400 - Conflit horaire",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"status\": \"SCHEDULED\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/appointments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"statusCode\": 400,\n    \"message\": \"Le créneau horaire n'est pas disponible\",\n    \"error\": \"Bad Request\"\n}"
+            },
+            {
+              "name": "404 - Praticien ou patient non trouvé",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655449999\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"status\": \"SCHEDULED\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/appointments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"statusCode\": 404,\n    \"message\": \"Praticien non trouvé\",\n    \"error\": \"Not Found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Cancel Appointment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/appointments/{{appointmentId}}/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "appointments",
+                "{{appointmentId}}",
+                "cancel"
+              ]
+            },
+            "description": "Annule un rendez-vous existant."
+          },
+          "response": [
+            {
+              "name": "200 - Succès",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/appointments/550e8400-e29b-41d4-a716-446655440200/cancel",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments",
+                    "550e8400-e29b-41d4-a716-446655440200",
+                    "cancel"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440200\",\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00.000Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00.000Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"CANCELLED\",\n    \"cancellationReason\": \"Patient indisponible\",\n    \"cancellationDate\": \"2023-06-15T12:00:00.000Z\",\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T11:00:00.000Z\",\n    \"updatedAt\": \"2023-06-15T12:00:00.000Z\"\n}"
+            },
+            {
+              "name": "404 - Rendez-vous non trouvé",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/appointments/550e8400-e29b-41d4-a716-446655449999/cancel",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments",
+                    "550e8400-e29b-41d4-a716-446655449999",
+                    "cancel"
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"statusCode\": 404,\n    \"message\": \"Rendez-vous non trouvé\",\n    \"error\": \"Not Found\"\n}"
+            },
+            {
+              "name": "400 - Déjà annulé",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/appointments/550e8400-e29b-41d4-a716-446655440200/cancel",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments",
+                    "550e8400-e29b-41d4-a716-446655440200",
+                    "cancel"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"statusCode\": 400,\n    \"message\": \"Ce rendez-vous est déjà annulé\",\n    \"error\": \"Bad Request\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

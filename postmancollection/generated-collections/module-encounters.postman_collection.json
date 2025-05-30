@@ -1,0 +1,173 @@
+{
+  "info": {
+    "_postman_id": "281874a0-d7e7-4c71-85ad-fa82cd10d59c",
+    "name": "Module Encounters - Medical",
+    "description": "Collection complète pour le module encounters du système médical",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Encounters",
+      "item": [
+        {
+          "name": "Créer une consultation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.id) {",
+                  "    pm.environment.set('encounterId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/encounters",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encounters"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"patientId\": \"{{patientId}}\",\n  \"practitionerId\": \"{{practitionerId}}\",\n  \"startAt\": \"2024-01-15T09:00:00Z\",\n  \"motive\": \"Consultation de routine\",\n  \"exam\": \"Examen clinique normal\",\n  \"diagnosis\": \"Bonne santé générale\",\n  \"icd10Codes\": [\n    \"Z00.0\"\n  ]\n}"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Consultations du patient",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/encounters/patient/:patientId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encounters",
+                "patient",
+                ":patientId"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Obtenir une consultation",
+          "event": [],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/encounters/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encounters",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Modifier une consultation",
+          "event": [],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/encounters/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encounters",
+                ":id"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verrouiller une consultation",
+          "event": [],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/encounters/:id/lock",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "encounters",
+                ":id",
+                "lock"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
