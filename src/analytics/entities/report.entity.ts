@@ -1,5 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { GraphQLJSON } from 'graphql-type-json';
 
 export enum ReportFormat {
   PDF = 'PDF',
@@ -26,7 +27,7 @@ export class Report {
   name: string;
 
   @Column({ type: 'jsonb' })
-  @Field()
+  @Field(() => GraphQLJSON)
   params: Record<string, any>;
 
   @Column({ name: 'generated_path' })

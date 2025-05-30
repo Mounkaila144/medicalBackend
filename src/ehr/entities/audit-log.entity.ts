@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { User } from '../../auth/entities/user.entity';
+import { GraphQLJSON } from 'graphql-type-json';
 
 @ObjectType()
 @Entity('audit_logs')
@@ -30,11 +31,11 @@ export class AuditLog {
   column: string;
 
   @Column('jsonb', { nullable: true })
-  @Field({ nullable: true })
+  @Field(() => GraphQLJSON, { nullable: true })
   before: Record<string, any>;
 
   @Column('jsonb')
-  @Field()
+  @Field(() => GraphQLJSON)
   after: Record<string, any>;
 
   @Column({ name: 'changed_at' })

@@ -1,0 +1,250 @@
+{
+	"info": {
+		"_postman_id": "e35d9c7f-8e56-4b9d-9e1c-45d7abc9a123",
+		"name": "Module EHR",
+		"description": "Collection pour le module EHR (Electronic Health Record)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Créer un Encounter",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"motive\": \"Douleurs abdominales et fièvre\",\n    \"exam\": \"Examen physique montre une sensibilité dans la région inférieure droite de l'abdomen. Température: 38.5°C\",\n    \"diagnosis\": \"Appendicite aiguë suspectée\",\n    \"icd10Codes\": [\"K35.80\", \"R10.0\"]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/encounters",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"encounters"
+					]
+				},
+				"description": "Créer un nouveau dossier de consultation (encounter)"
+			},
+			"response": []
+		},
+		{
+			"name": "Verrouiller un Encounter",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/encounters/{{id}}/lock",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"encounters",
+						"{{id}}",
+						"lock"
+					]
+				},
+				"description": "Verrouiller un dossier de consultation pour empêcher des modifications ultérieures"
+			},
+			"response": []
+		},
+		{
+			"name": "Créer une prescription",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/pdf",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"medications\": [\n        {\n            \"name\": \"Amoxicilline\",\n            \"dosage\": \"500mg\",\n            \"frequency\": \"3 fois par jour\",\n            \"duration\": \"7 jours\"\n        },\n        {\n            \"name\": \"Paracétamol\",\n            \"dosage\": \"1000mg\",\n            \"frequency\": \"toutes les 6 heures si nécessaire\",\n            \"duration\": \"selon besoin\"\n        }\n    ],\n    \"instructions\": \"Prendre les antibiotiques avec de la nourriture. Revenir si les symptômes persistent après 3 jours.\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/encounters/{{id}}/prescriptions",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"encounters",
+						"{{id}}",
+						"prescriptions"
+					]
+				},
+				"description": "Générer une prescription pour un encounter spécifique"
+			},
+			"response": [
+				{
+					"name": "Prescription PDF",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/pdf",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"medications\": [\n        {\n            \"name\": \"Amoxicilline\",\n            \"dosage\": \"500mg\",\n            \"frequency\": \"3 fois par jour\",\n            \"duration\": \"7 jours\"\n        },\n        {\n            \"name\": \"Paracétamol\",\n            \"dosage\": \"1000mg\",\n            \"frequency\": \"toutes les 6 heures si nécessaire\",\n            \"duration\": \"selon besoin\"\n        }\n    ],\n    \"instructions\": \"Prendre les antibiotiques avec de la nourriture. Revenir si les symptômes persistent après 3 jours.\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/encounters/{{id}}/prescriptions",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"encounters",
+								"{{id}}",
+								"prescriptions"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "pdf",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/pdf"
+						}
+					],
+					"cookie": [],
+					"body": "JVBERi0xLjMKJcTl8uXrp/Clo..." // Contenu PDF tronqué pour l'exemple
+				}
+			]
+		},
+		{
+			"name": "Obtenir un Encounter",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/encounters/{{id}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"encounters",
+						"{{id}}"
+					]
+				},
+				"description": "Récupérer les détails d'un dossier de consultation spécifique"
+			},
+			"response": []
+		},
+		{
+			"name": "Créer un rapport de laboratoire",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"patientId\": \"PAT123456\",\n    \"encounterId\": \"{{id}}\",\n    \"testType\": \"Numération Formule Sanguine\",\n    \"results\": [\n        {\n            \"name\": \"Globules blancs\",\n            \"value\": \"12.5\",\n            \"unit\": \"10^9/L\",\n            \"referenceRange\": \"4.0-11.0\",\n            \"flag\": \"H\"\n        },\n        {\n            \"name\": \"Hémoglobine\",\n            \"value\": \"14.2\",\n            \"unit\": \"g/dL\",\n            \"referenceRange\": \"12.0-16.0\",\n            \"flag\": \"N\"\n        },\n        {\n            \"name\": \"Plaquettes\",\n            \"value\": \"250\",\n            \"unit\": \"10^9/L\",\n            \"referenceRange\": \"150-450\",\n            \"flag\": \"N\"\n        }\n    ],\n    \"collectedAt\": \"2023-11-15T09:30:00Z\",\n    \"reportedAt\": \"2023-11-15T14:45:00Z\",\n    \"comments\": \"Leucocytose légère compatible avec un processus inflammatoire/infectieux\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/labs",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"labs"
+					]
+				},
+				"description": "Créer un nouveau rapport de laboratoire"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://api.medical.example.com/v1",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "votre_token_jwt_ici",
+			"type": "string"
+		},
+		{
+			"key": "id",
+			"value": "ENC123456",
+			"type": "string"
+		}
+	]
+} 

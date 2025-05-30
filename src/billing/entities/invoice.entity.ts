@@ -3,6 +3,7 @@ import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Patient } from '../../patients/entities/patient.entity';
 import { InvoiceLine } from './invoice-line.entity';
 import { Payment } from './payment.entity';
+import { BillingAddress } from '../dto/billing-address.dto';
 
 export enum InvoiceStatus {
   DRAFT = 'DRAFT',
@@ -53,6 +54,22 @@ export class Invoice {
   @Column({ name: 'due_at', nullable: true })
   @Field({ nullable: true })
   dueAt: Date;
+
+  @Column({ name: 'encounter_id', nullable: true })
+  @Field({ nullable: true })
+  encounterId: string;
+
+  @Column({ name: 'issue_date', nullable: true })
+  @Field({ nullable: true })
+  issueDate: Date;
+
+  @Column({ type: 'jsonb', nullable: true })
+  @Field(() => BillingAddress, { nullable: true })
+  billingAddress: BillingAddress;
+
+  @Column({ type: 'text', nullable: true })
+  @Field({ nullable: true })
+  notes: string;
 
   @OneToMany(() => InvoiceLine, (line) => line.invoice, { cascade: true })
   @Field(() => [InvoiceLine], { nullable: true })

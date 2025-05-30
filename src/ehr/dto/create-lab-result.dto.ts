@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 import { IsDate, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
+import { GraphQLJSON } from 'graphql-type-json';
 
 @InputType()
 export class CreateLabResultDto {
@@ -16,7 +17,7 @@ export class CreateLabResultDto {
   @IsString()
   labName: string;
 
-  @Field()
+  @Field(() => GraphQLJSON)
   @IsObject()
   result: Record<string, any>;
 

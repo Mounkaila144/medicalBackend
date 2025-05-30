@@ -2,6 +2,7 @@ import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsObject, IsOptional, IsString, Is
 import { Field, InputType } from '@nestjs/graphql';
 import { Gender } from '../entities/patient.entity';
 import { Transform, Type } from 'class-transformer';
+import { GraphQLJSON } from 'graphql-type-json';
 
 @InputType()
 export class CreatePatientDto {
@@ -51,7 +52,7 @@ export class CreatePatientDto {
   @IsOptional()
   email?: string;
 
-  @Field(() => String)
+  @Field(() => GraphQLJSON)
   @IsObject()
   @IsNotEmpty()
   address: any;

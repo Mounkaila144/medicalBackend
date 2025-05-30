@@ -15,6 +15,8 @@ import { InventoryModule } from './inventory/inventory.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { HrModule } from './hr/hr.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -34,7 +36,16 @@ import { AnalyticsModule } from './analytics/analytics.module';
           return {
             type: 'sqlite',
             database: configService.get<string>('DATABASE_MEMORY') === 'true' ? ':memory:' : 'db.sqlite',
-            entities: [__dirname + '/**/*.entity{.ts,.js}'],
+            entities: [
+              __dirname + '/auth/entities/*.entity{.ts,.js}',
+              __dirname + '/patients/entities/*.entity{.ts,.js}',
+              __dirname + '/scheduling/entities/*.entity{.ts,.js}',
+              __dirname + '/ehr/entities/*.entity{.ts,.js}',
+              __dirname + '/billing/entities/*.entity{.ts,.js}',
+              __dirname + '/inventory/entities/*.entity{.ts,.js}',
+              __dirname + '/hr/entities/*.entity{.ts,.js}',
+              __dirname + '/analytics/entities/*.entity{.ts,.js}',
+            ],
             synchronize: true,
             logging: configService.get<string>('NODE_ENV') !== 'production',
           };
@@ -48,7 +59,16 @@ import { AnalyticsModule } from './analytics/analytics.module';
           username: configService.get<string>('DATABASE_USERNAME') || configService.get<string>('DB_USERNAME'),
           password: configService.get<string>('DATABASE_PASSWORD') || configService.get<string>('DB_PASSWORD'),
           database: configService.get<string>('DATABASE_NAME') || configService.get<string>('DB_NAME'),
-          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          entities: [
+            __dirname + '/auth/entities/*.entity{.ts,.js}',
+            __dirname + '/patients/entities/*.entity{.ts,.js}',
+            __dirname + '/scheduling/entities/*.entity{.ts,.js}',
+            __dirname + '/ehr/entities/*.entity{.ts,.js}',
+            __dirname + '/billing/entities/*.entity{.ts,.js}',
+            __dirname + '/inventory/entities/*.entity{.ts,.js}',
+            __dirname + '/hr/entities/*.entity{.ts,.js}',
+            __dirname + '/analytics/entities/*.entity{.ts,.js}',
+          ],
           synchronize: configService.get<string>('NODE_ENV') !== 'production',
           logging: configService.get<string>('NODE_ENV') !== 'production',
           ssl: false,
@@ -71,6 +91,12 @@ import { AnalyticsModule } from './analytics/analytics.module';
     AnalyticsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AppModule {}

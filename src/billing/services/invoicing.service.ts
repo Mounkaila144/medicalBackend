@@ -27,6 +27,10 @@ export class InvoicingService {
       number: createInvoiceDto.number || `INV-${Date.now()}`,
       status: InvoiceStatus.DRAFT,
       dueAt: createInvoiceDto.dueAt || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 jours par défaut
+      encounterId: createInvoiceDto.encounterId,
+      issueDate: createInvoiceDto.issueDate || new Date(),
+      billingAddress: createInvoiceDto.billingAddress,
+      notes: createInvoiceDto.notes,
     });
 
     return this.invoiceRepository.save(invoice);
@@ -146,5 +150,26 @@ export class InvoicingService {
 
     invoice.total = total;
     return this.invoiceRepository.save(invoice);
+  }
+
+  async findAll(tenantId: string): Promise<Invoice[]> {
+    return this.invoiceRepository.find({
+      where: { tenantId },
+      relations: ['patient', 'lines'],
+      order: { issueDate: 'DESC' }
+    });
+  }
+
+  async findOne(tenantId: string, id: string): Promise<Invoice> {
+    const invoice = await this.invoiceRepository.findOne({
+      where: { id, tenantId },
+      relations: ['patient', 'lines', 'payments']
+    });
+
+    if (!invoice) {
+      throw new NotFoundException(`Facture avec l'ID ${id} non trouvée`);
+    }
+
+    return invoice;
   }
 } 

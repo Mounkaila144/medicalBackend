@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { GraphQLJSON } from 'graphql-type-json';
 import { Patient } from '../../patients/entities/patient.entity';
 import { Encounter } from './encounter.entity';
 
@@ -35,7 +36,7 @@ export class LabResult {
   labName: string;
 
   @Column('jsonb')
-  @Field()
+  @Field(() => GraphQLJSON)
   result: Record<string, any>;
 
   @Column({ name: 'file_path', nullable: true })

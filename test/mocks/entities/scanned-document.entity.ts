@@ -34,7 +34,7 @@ export class ScannedDocument {
   path: string;
 
   @Field()
-  @Column({ name: 'uploaded_at', type: 'datetime' })
+  @Column({ name: 'uploaded_at', type: 'timestamp' })
   uploadedAt: Date;
 
   @ManyToOne(() => Patient, (patient) => patient.documents, {

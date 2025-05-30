@@ -8,7 +8,7 @@ import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../../common/guards/gql-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/enums/user-role.enum';
+import { AuthUserRole } from '../../auth/entities/user.entity';
 import { EHRSupervisorGuard } from '../guards/ehr-supervisor.guard';
 
 @Resolver(() => Encounter)
@@ -17,7 +17,7 @@ export class EncountersResolver {
   constructor(private readonly encountersService: EncountersService) {}
 
   @Mutation(() => Encounter)
-  @Roles(UserRole.DOCTOR, UserRole.NURSE, UserRole.SUPERVISOR)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async createEncounter(
     @Args('createEncounterDto') createEncounterDto: CreateEncounterDto,
     @Context() context,
@@ -26,20 +26,20 @@ export class EncountersResolver {
   }
 
   @Query(() => [Encounter])
-  @Roles(UserRole.DOCTOR, UserRole.NURSE, UserRole.SUPERVISOR, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async encounters(@Context() context) {
     return this.encountersService.findAll(context.req.user.tenantId);
   }
 
   @Query(() => Encounter)
-  @Roles(UserRole.DOCTOR, UserRole.NURSE, UserRole.SUPERVISOR, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async encounter(@Args('id') id: string) {
     return this.encountersService.findOne(id);
   }
 
   @Mutation(() => Encounter)
   @UseGuards(EHRSupervisorGuard)
-  @Roles(UserRole.DOCTOR, UserRole.NURSE, UserRole.SUPERVISOR)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async updateEncounter(
     @Args('updateEncounterDto') updateEncounterDto: UpdateEncounterDto,
     @Context() context,
@@ -48,7 +48,7 @@ export class EncountersResolver {
   }
 
   @Mutation(() => Encounter)
-  @Roles(UserRole.DOCTOR, UserRole.SUPERVISOR)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async lockEncounter(
     @Args('lockEncounterDto') lockEncounterDto: LockEncounterDto,
     @Context() context,

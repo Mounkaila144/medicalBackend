@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, Query, UseGuards, Req, Res } from '@nestjs/common';
 import { PatientsService } from '../services/patients.service';
 import { CreatePatientDto } from '../dto/create-patient.dto';
 import { UpdatePatientDto } from '../dto/update-patient.dto';
@@ -8,20 +8,34 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { Roles } from '../../auth/guards/roles.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { AuthUserRole } from '../../auth/entities/user.entity';
+import { WhatsappService } from '../services/whatsapp.service';
 
 @Controller('patients')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class PatientsController {
-  constructor(private readonly patientsService: PatientsService) {}
+  constructor(
+    private readonly patientsService: PatientsService,
+    private readonly whatsappService: WhatsappService
+  ) {}
 
   @Post()
   @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async create(
     @Body() createPatientDto: CreatePatientDto,
-    @Req() req
-  ): Promise<Patient> {
+    @Req() req,
+    @Res() res
+  ): Promise<void> {
     const tenantId = req.user.tenantId;
-    return this.patientsService.create(createPatientDto, tenantId);
+    const patient = await this.patientsService.create(createPatientDto, tenantId);
+    
+    // Générer le lien WhatsApp
+    const whatsappUrl = this.whatsappService.generateWhatsappLink(patient);
+    
+    // Retourner l'URL avec les informations du patient pour la redirection
+    res.status(201).json({
+      patient,
+      redirectUrl: whatsappUrl
+    });
   }
 
   @Get()

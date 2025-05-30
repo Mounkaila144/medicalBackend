@@ -1,0 +1,858 @@
+{
+	"info": {
+		"_postman_id": "b7a32154-d8c6-4e65-a6c7-2e45f9a6b1dc",
+		"name": "Module Auth - Medical",
+		"description": "Collection pour le module d'authentification du monolithe NestJS Medical",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.environment.set('accessToken', jsonData.accessToken);",
+									"}",
+									"if (jsonData.refreshToken) {",
+									"    pm.environment.set('refreshToken', jsonData.refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authentification d'un utilisateur avec email et mot de passe."
+					},
+					"response": [
+						{
+							"name": "200 - Succès",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"email\": \"admin@example.com\",\n        \"role\": \"CLINIC_ADMIN\",\n        \"firstName\": \"Admin\",\n        \"lastName\": \"User\"\n    }\n}"
+						},
+						{
+							"name": "401 - Non autorisé",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"wrong_password\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 401,\n    \"message\": \"Identifiants incorrects\",\n    \"error\": \"Unauthorized\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.accessToken) {",
+									"    pm.environment.set('accessToken', jsonData.accessToken);",
+									"}",
+									"if (jsonData.refreshToken) {",
+									"    pm.environment.set('refreshToken', jsonData.refreshToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/refresh",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						},
+						"description": "Rafraîchit le token d'accès à l'aide du token de rafraîchissement."
+					},
+					"response": [
+						{
+							"name": "200 - Succès",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/refresh",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"email\": \"admin@example.com\",\n        \"role\": \"CLINIC_ADMIN\",\n        \"firstName\": \"Admin\",\n        \"lastName\": \"User\"\n    }\n}"
+						},
+						{
+							"name": "401 - Non autorisé",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"refreshToken\": \"invalid_token\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/refresh",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 401,\n    \"message\": \"Token de rafraîchissement invalide\",\n    \"error\": \"Unauthorized\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/logout",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Déconnecte l'utilisateur et invalide le token de rafraîchissement."
+					},
+					"response": [
+						{
+							"name": "200 - Succès",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/auth/logout",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"success\": true,\n    \"removedSessions\": 1\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Create Tenant",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"if (jsonData.tenant && jsonData.tenant.id) {",
+									"    pm.environment.set('tenantId', jsonData.tenant.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"adminEmail\": \"admin@clinique-exemple.com\",\n    \"adminPassword\": \"password123\",\n    \"adminFirstName\": \"Admin\",\n    \"adminLastName\": \"Clinique\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/admin/tenants",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"tenants"
+							]
+						},
+						"description": "Crée un nouveau tenant avec son administrateur (réservé aux superadmins)."
+					},
+					"response": [
+						{
+							"name": "201 - Créé",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"adminEmail\": \"admin@clinique-exemple.com\",\n    \"adminPassword\": \"password123\",\n    \"adminFirstName\": \"Admin\",\n    \"adminLastName\": \"Clinique\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/tenants",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"tenants"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"tenant\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"name\": \"Clinique Exemple\",\n        \"slug\": \"clinique-exemple\",\n        \"isActive\": true,\n        \"createdAt\": \"2023-06-15T10:30:00.000Z\",\n        \"updatedAt\": \"2023-06-15T10:30:00.000Z\"\n    },\n    \"admin\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440002\",\n        \"email\": \"admin@clinique-exemple.com\",\n        \"role\": \"CLINIC_ADMIN\",\n        \"firstName\": \"Admin\",\n        \"lastName\": \"Clinique\"\n    }\n}"
+						},
+						{
+							"name": "403 - Interdit",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"adminEmail\": \"admin@clinique-exemple.com\",\n    \"adminPassword\": \"password123\",\n    \"adminFirstName\": \"Admin\",\n    \"adminLastName\": \"Clinique\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/tenants",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"tenants"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 403,\n    \"message\": \"Accès non autorisé\",\n    \"error\": \"Forbidden\"\n}"
+						},
+						{
+							"name": "401 - Non authentifié",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"adminEmail\": \"admin@clinique-exemple.com\",\n    \"adminPassword\": \"password123\",\n    \"adminFirstName\": \"Admin\",\n    \"adminLastName\": \"Clinique\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/admin/tenants",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"tenants"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 401,\n    \"message\": \"Non authentifié\",\n    \"error\": \"Unauthorized\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Deactivate Tenant",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/tenants/{{tenantId}}/deactivate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"tenants",
+								"{{tenantId}}",
+								"deactivate"
+							]
+						},
+						"description": "Désactive un tenant existant (réservé aux superadmins)."
+					},
+					"response": [
+						{
+							"name": "200 - Succès",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/admin/tenants/550e8400-e29b-41d4-a716-446655440001/deactivate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"tenants",
+										"550e8400-e29b-41d4-a716-446655440001",
+										"deactivate"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"isActive\": false,\n    \"deactivatedAt\": \"2023-06-15T12:30:00.000Z\",\n    \"createdAt\": \"2023-06-15T10:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T12:30:00.000Z\"\n}"
+						},
+						{
+							"name": "403 - Interdit",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/tenants/550e8400-e29b-41d4-a716-446655440001/deactivate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"tenants",
+										"550e8400-e29b-41d4-a716-446655440001",
+										"deactivate"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 403,\n    \"message\": \"Accès non autorisé\",\n    \"error\": \"Forbidden\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Reactivate Tenant",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/admin/tenants/{{tenantId}}/reactivate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"admin",
+								"tenants",
+								"{{tenantId}}",
+								"reactivate"
+							]
+						},
+						"description": "Réactive un tenant désactivé (réservé aux superadmins)."
+					},
+					"response": [
+						{
+							"name": "200 - Succès",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/admin/tenants/550e8400-e29b-41d4-a716-446655440001/reactivate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"tenants",
+										"550e8400-e29b-41d4-a716-446655440001",
+										"reactivate"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"isActive\": true,\n    \"deactivatedAt\": null,\n    \"createdAt\": \"2023-06-15T10:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T14:30:00.000Z\"\n}"
+						},
+						{
+							"name": "403 - Interdit",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/admin/tenants/550e8400-e29b-41d4-a716-446655440001/reactivate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"admin",
+										"tenants",
+										"550e8400-e29b-41d4-a716-446655440001",
+										"reactivate"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 403,\n    \"message\": \"Accès non autorisé\",\n    \"error\": \"Forbidden\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"employee@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Crée un nouvel utilisateur (réservé aux superadmins et admins de clinique)."
+					},
+					"response": [
+						{
+							"name": "201 - Créé",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"employee@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440003\",\n    \"email\": \"employee@example.com\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"isActive\": true,\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T15:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T15:30:00.000Z\"\n}"
+						},
+						{
+							"name": "403 - Interdit",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"employee@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 403,\n    \"message\": \"Accès non autorisé\",\n    \"error\": \"Forbidden\"\n}"
+						},
+						{
+							"name": "401 - Non authentifié",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"employee@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "Unauthorized",
+							"code": 401,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 401,\n    \"message\": \"Non authentifié\",\n    \"error\": \"Unauthorized\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Deactivate User",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{accessToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/users/:id/deactivate",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								":id",
+								"deactivate"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "550e8400-e29b-41d4-a716-446655440003"
+								}
+							]
+						},
+						"description": "Désactive un utilisateur existant (réservé aux superadmins et admins de clinique)."
+					},
+					"response": [
+						{
+							"name": "200 - Succès",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{accessToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/users/550e8400-e29b-41d4-a716-446655440003/deactivate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"550e8400-e29b-41d4-a716-446655440003",
+										"deactivate"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440003\",\n    \"email\": \"employee@example.com\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"isActive\": false,\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T15:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T16:30:00.000Z\"\n}"
+						},
+						{
+							"name": "403 - Interdit",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/users/550e8400-e29b-41d4-a716-446655440003/deactivate",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users",
+										"550e8400-e29b-41d4-a716-446655440003",
+										"deactivate"
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 403,\n    \"message\": \"Accès non autorisé\",\n    \"error\": \"Forbidden\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+} 

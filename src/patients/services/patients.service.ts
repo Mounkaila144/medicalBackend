@@ -25,10 +25,15 @@ export class PatientsService {
     const savedPatient = await this.patientsRepository.save(patient);
     
     // Publier un événement patient.created
+    try {
     this.rabbitmqClient.emit('patient.created', {
       patient: savedPatient,
       timestamp: new Date(),
     });
+    } catch (error) {
+      console.error('Erreur lors de l\'émission de l\'événement RabbitMQ:', error);
+      // Ne pas échouer la création du patient si RabbitMQ n'est pas disponible
+    }
 
     return savedPatient;
   }

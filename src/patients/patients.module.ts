@@ -13,10 +13,12 @@ import { ScannedDocument } from './entities/scanned-document.entity';
 import { PatientsService } from './services/patients.service';
 import { MedicalHistoryService } from './services/medical-history.service';
 import { DocumentsService } from './services/documents.service';
+import { WhatsappService } from './services/whatsapp.service';
 
 import { PatientsController } from './controllers/patients.controller';
 import { MedicalHistoryController } from './controllers/medical-history.controller';
 import { DocumentsController } from './controllers/documents.controller';
+import { PublicPatientsController } from './controllers/public-patients.controller';
 
 import { PatientsResolver } from './resolvers/patients.resolver';
 import { MedicalHistoryResolver } from './resolvers/medical-history.resolver';
@@ -54,11 +56,13 @@ import { AuthModule } from '../auth/auth.module';
     PatientsController,
     MedicalHistoryController,
     DocumentsController,
+    PublicPatientsController,
   ],
   providers: [
     PatientsService,
     MedicalHistoryService,
     DocumentsService,
+    WhatsappService,
     PatientsResolver,
     MedicalHistoryResolver,
     DocumentsResolver,

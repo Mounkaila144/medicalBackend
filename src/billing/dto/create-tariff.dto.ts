@@ -1,5 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { IsDecimal, IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { TariffCategory } from '../entities/tariff.entity';
 
 @InputType()
@@ -15,7 +16,14 @@ export class CreateTariffDto {
   label: string;
 
   @Field()
-  @IsDecimal()
+  @IsNumber()
+  @Min(0)
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return parseFloat(value);
+    }
+    return value;
+  })
   price: number;
 
   @Field(() => TariffCategory)

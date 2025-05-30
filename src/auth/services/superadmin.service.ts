@@ -92,6 +92,12 @@ export class SuperadminService {
     // Réactiver le tenant
     await this.tenantsRepository.update(id, { isActive: true });
 
+    // Réactiver tous les utilisateurs du tenant
+    const users = await this.usersService.findAllByTenant(id);
+    for (const user of users) {
+      await this.usersService.reactivate(user.id);
+    }
+
     return this.findTenantById(id);
   }
 } 

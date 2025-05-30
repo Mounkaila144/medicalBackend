@@ -3,6 +3,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } fro
 import { SchedulingService } from '../services/scheduling.service';
 import { CreateAppointmentDto } from '../dto/create-appointment.dto';
 import { RescheduleAppointmentDto } from '../dto/reschedule-appointment.dto';
+import { CancelAppointmentDto } from '../dto/cancel-appointment.dto';
 import { Appointment } from '../entities/appointment.entity';
 import { TenantId } from '../../common/decorators/tenant-id.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
@@ -29,12 +30,13 @@ export class AppointmentsController {
     return this.schedulingService.reschedule(tenantId, rescheduleDto);
   }
 
-  @Delete(':id')
+  @Post(':id/cancel')
   async cancel(
     @TenantId() tenantId: string,
     @Param('id') appointmentId: string,
+    @Body() cancelDto: CancelAppointmentDto,
   ): Promise<Appointment> {
-    return this.schedulingService.cancel(tenantId, appointmentId);
+    return this.schedulingService.cancel(tenantId, appointmentId, cancelDto);
   }
 
   @Get('practitioner/:practitionerId')

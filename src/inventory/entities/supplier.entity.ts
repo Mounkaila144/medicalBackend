@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { GraphQLJSON } from 'graphql-type-json';
 import { Tenant } from '../../auth/entities/tenant.entity';
 
 @ObjectType()
@@ -17,7 +18,7 @@ export class Supplier {
   @Column()
   name: string;
 
-  @Field(() => String)
+  @Field(() => GraphQLJSON)
   @Column({ type: 'json' })
   contact: Record<string, any>;
 } 

@@ -2,6 +2,7 @@ import { IsDate, IsEmail, IsEnum, IsObject, IsOptional, IsString, IsUUID } from 
 import { Field, InputType } from '@nestjs/graphql';
 import { Gender } from '../entities/patient.entity';
 import { Type } from 'class-transformer';
+import { GraphQLJSON } from 'graphql-type-json';
 
 @InputType()
 export class UpdatePatientDto {
@@ -41,7 +42,7 @@ export class UpdatePatientDto {
   @IsOptional()
   email?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => GraphQLJSON, { nullable: true })
   @IsObject()
   @IsOptional()
   address?: any;

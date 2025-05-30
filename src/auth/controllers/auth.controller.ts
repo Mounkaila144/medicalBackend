@@ -5,11 +5,13 @@ import { JwtRefreshGuard } from '../../common/guards/jwt-refresh.guard';
 import { LoginDto } from '../dto/login.dto';
 import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { Public } from '../../common/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Public()
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(200)
@@ -17,6 +19,7 @@ export class AuthController {
     return this.authService.login(req.user);
   }
 
+  @Public()
   @UseGuards(JwtRefreshGuard)
   @Post('refresh')
   @HttpCode(200)
@@ -24,6 +27,7 @@ export class AuthController {
     return this.authService.refresh(user.id, user.refreshToken);
   }
 
+  @Public()
   @Post('logout')
   @HttpCode(200)
   async logout(@Body() refreshTokenDto: RefreshTokenDto, @Request() req) {

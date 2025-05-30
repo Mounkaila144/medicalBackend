@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryG
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MedicalHistoryItem } from './medical-history-item.entity';
 import { ScannedDocument } from './scanned-document.entity';
+import { GraphQLJSON } from 'graphql-type-json';
 
 export enum Gender {
   MALE = 'M',
@@ -55,7 +56,7 @@ export class Patient {
   @Column({ nullable: true })
   email: string;
 
-  @Field(() => String)
+  @Field(() => GraphQLJSON)
   @Column({ type: 'jsonb' })
   address: any;
 

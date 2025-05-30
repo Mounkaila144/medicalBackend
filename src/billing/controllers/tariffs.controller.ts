@@ -6,7 +6,7 @@ import { CreateTariffDto } from '../dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/enums/user-role.enum';
+import { AuthUserRole } from '../../auth/entities/user.entity';
 
 @Controller('tariffs')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -17,7 +17,7 @@ export class TariffsController {
   ) {}
 
   @Post()
-  @Roles(UserRole.ADMIN)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN)
   async create(@Body() createTariffDto: CreateTariffDto, @Req() req) {
     const tariff = this.tariffRepository.create({
       ...createTariffDto,
@@ -27,7 +27,7 @@ export class TariffsController {
   }
 
   @Get()
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.NURSE, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async findAll(@Req() req) {
     return this.tariffRepository.find({
       where: { tenantId: req.user.tenantId },
@@ -35,7 +35,7 @@ export class TariffsController {
   }
 
   @Get('category/:category')
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.NURSE, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async findByCategory(@Param('category') category: TariffCategory, @Req() req) {
     return this.tariffRepository.find({
       where: {

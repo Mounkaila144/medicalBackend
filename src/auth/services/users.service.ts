@@ -94,6 +94,15 @@ export class UsersService {
     return this.findById(id);
   }
 
+  async reactivate(id: string): Promise<User> {
+    const user = await this.findById(id);
+
+    // Réactiver l'utilisateur
+    await this.usersRepository.update(id, { isActive: true });
+
+    return this.findById(id);
+  }
+
   async findAllByTenant(tenantId: string): Promise<User[]> {
     return this.usersRepository.find({
       where: { tenantId },

@@ -8,6 +8,7 @@ import { Appointment } from '../entities/appointment.entity';
 import { Practitioner } from '../entities/practitioner.entity';
 import { CreateAppointmentDto } from '../dto/create-appointment.dto';
 import { RescheduleAppointmentDto } from '../dto/reschedule-appointment.dto';
+import { CancelAppointmentDto } from '../dto/cancel-appointment.dto';
 import { AppointmentStatus } from '../enums/appointment-status.enum';
 import { AppointmentCreatedEvent } from '../events/appointment-created.event';
 import { AppointmentCancelledEvent } from '../events/appointment-cancelled.event';
@@ -89,7 +90,11 @@ export class SchedulingService {
     return this.appointmentRepository.save(appointment);
   }
 
-  async cancel(tenantId: string, appointmentId: string): Promise<Appointment> {
+  async cancel(
+    tenantId: string, 
+    appointmentId: string,
+    cancelDto?: CancelAppointmentDto,
+  ): Promise<Appointment> {
     const appointment = await this.appointmentRepository.findOne({
       where: { id: appointmentId, tenantId },
     });
@@ -99,12 +104,16 @@ export class SchedulingService {
     }
 
     appointment.status = AppointmentStatus.CANCELLED;
+    if (cancelDto?.cancellationReason) {
+      appointment.reason = `Annulé: ${cancelDto.cancellationReason}`;
+    }
+    
     const updatedAppointment = await this.appointmentRepository.save(appointment);
     
     // Émettre l'événement d'annulation
     this.eventEmitter.emit(
       'appointment.cancelled',
-      new AppointmentCancelledEvent(updatedAppointment),
+      new AppointmentCancelledEvent(updatedAppointment, cancelDto?.notifyPatient ?? true),
     );
 
     return updatedAppointment;
