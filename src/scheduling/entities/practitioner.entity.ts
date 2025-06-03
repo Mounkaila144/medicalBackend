@@ -1,7 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn, OneToOne, JoinColumn } from 'typeorm';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Availability } from './availability.entity';
 import { Appointment } from './appointment.entity';
+import { User } from '../../auth/entities/user.entity';
 
 @ObjectType()
 @Entity('practitioners')
@@ -29,6 +30,14 @@ export class Practitioner {
   @Field()
   @Column()
   color: string;
+
+  @Field({ nullable: true })
+  @Column({ name: 'user_id', type: 'uuid', nullable: true })
+  userId: string;
+
+  @OneToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @OneToMany(() => Availability, (availability) => availability.practitioner)
   availabilities: Availability[];

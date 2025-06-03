@@ -18,24 +18,43 @@ export class AnalyticsService {
   ) {}
 
   async generate(tenantId: string, generateReportDto: GenerateReportDto): Promise<Report> {
+    console.log('Starting report generation with:', { tenantId, generateReportDto });
+    
     const { reportType, name, params, format = ReportFormat.PDF } = generateReportDto;
     
-    // Récupérer les données selon le type de rapport
-    const data = await this.fetchReportData(tenantId, reportType, params);
-    
-    // Générer le fichier
-    const filePath = await this.generateFile(tenantId, name, data, format);
-    
-    // Créer l'entrée de rapport dans la base de données
-    const report = this.reportRepository.create({
-      tenantId,
-      name,
-      params,
-      generatedPath: filePath,
-      format,
-    });
-    
-    return this.reportRepository.save(report);
+    try {
+      // Test 1: Récupérer les données selon le type de rapport
+      console.log('Step 1: Fetching report data...');
+      const data = await this.fetchReportData(tenantId, reportType, params);
+      console.log('Data fetched successfully:', data.length, 'records');
+      
+      // Test 2: Générer le fichier
+      console.log('Step 2: Generating file...');
+      const filePath = await this.generateFile(tenantId, name, data, format);
+      console.log('File generated successfully at:', filePath);
+      
+      // Test 3: Créer l'entrée de rapport dans la base de données
+      console.log('Step 3: Creating report entity...');
+      const report = this.reportRepository.create({
+        tenantId,
+        name,
+        params,
+        generatedPath: filePath,
+        format,
+      });
+      console.log('Report entity created:', report);
+      
+      // Test 4: Sauvegarder en base
+      console.log('Step 4: Saving to database...');
+      const savedReport = await this.reportRepository.save(report);
+      console.log('Report saved successfully:', savedReport);
+      
+      return savedReport;
+    } catch (error) {
+      console.error('Error in generate method at step:', error);
+      console.error('Error stack:', error.stack);
+      throw error;
+    }
   }
 
   private async fetchReportData(
@@ -45,43 +64,73 @@ export class AnalyticsService {
   ): Promise<any[]> {
     const { startDate, endDate, practitionerId } = params;
     
-    let query: string;
+    // Pour l'instant, générer des données simulées
+    // TODO: Implémenter les vraies requêtes une fois les vues matérialisées créées
     
     switch (reportType) {
       case ReportType.DAILY_REVENUE:
-        query = `
-          SELECT * FROM daily_revenue
-          WHERE tenant_id = '${tenantId}'
-          AND date BETWEEN '${startDate}' AND '${endDate}'
-          ORDER BY date
-        `;
-        break;
+        return this.generateMockDailyRevenue(startDate, endDate);
         
       case ReportType.PRACTITIONER_KPI:
-        query = `
-          SELECT * FROM practitioner_kpi
-          WHERE tenant_id = '${tenantId}'
-          ${practitionerId ? `AND practitioner_id = '${practitionerId}'` : ''}
-        `;
-        break;
+        return this.generateMockPractitionerKPI(practitionerId);
         
       case ReportType.OCCUPANCY_RATE:
-        query = `
-          SELECT * FROM occupancy_rate
-          WHERE tenant_id = '${tenantId}'
-          ${practitionerId ? `AND practitioner_id = '${practitionerId}'` : ''}
-          AND date BETWEEN '${startDate}' AND '${endDate}'
-          ORDER BY date
-        `;
-        break;
+        return this.generateMockOccupancyRate(startDate, endDate, practitionerId);
         
       default:
         throw new NotFoundException(`Report type ${reportType} not supported`);
     }
+  }
+
+  private generateMockDailyRevenue(startDate: string, endDate: string): any[] {
+    const data: any[] = [];
+    const start = new Date(startDate);
+    const end = new Date(endDate);
     
-    // Exécuter la requête SQL brute
-    const result = await this.reportRepository.query(query);
-    return result;
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      data.push({
+        date: d.toISOString().split('T')[0],
+        total_revenue: Math.floor(Math.random() * 2000) + 500,
+        invoice_count: Math.floor(Math.random() * 20) + 5,
+      });
+    }
+    
+    return data;
+  }
+
+  private generateMockPractitionerKPI(practitionerId?: string): any[] {
+    return [
+      {
+        practitioner_id: practitionerId || 'b84141c5-8d0e-4b80-9da7-d5f6b2812daa',
+        practitioner_name: 'Dr. Sarah Johnson',
+        appointment_count: 45,
+        avg_appointment_duration_minutes: 30,
+        total_revenue: 6750.00,
+      },
+      {
+        practitioner_id: '550e8400-e29b-41d4-a716-446655440000',
+        practitioner_name: 'Dr. Michael Brown',
+        appointment_count: 38,
+        avg_appointment_duration_minutes: 35,
+        total_revenue: 5700.00,
+      },
+    ];
+  }
+
+  private generateMockOccupancyRate(startDate: string, endDate: string, practitionerId?: string): any[] {
+    const data: any[] = [];
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      data.push({
+        date: d.toISOString().split('T')[0],
+        practitioner_id: practitionerId || 'b84141c5-8d0e-4b80-9da7-d5f6b2812daa',
+        daily_occupancy_rate: Math.random() * 0.8 + 0.2, // Entre 20% et 100%
+      });
+    }
+    
+    return data;
   }
 
   private async generateFile(
@@ -172,8 +221,8 @@ export class AnalyticsService {
   }
 
   async refreshMaterializedViews(): Promise<void> {
-    await this.reportRepository.query('REFRESH MATERIALIZED VIEW daily_revenue');
-    await this.reportRepository.query('REFRESH MATERIALIZED VIEW practitioner_kpi');
-    await this.reportRepository.query('REFRESH MATERIALIZED VIEW occupancy_rate');
+    // Pour l'instant, ne rien faire car les vues n'existent pas encore
+    // TODO: Implémenter une fois les vues matérialisées créées
+    console.log('Materialized views refresh skipped - views not yet created');
   }
 } 

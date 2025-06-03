@@ -7,6 +7,7 @@ export enum AuthUserRole {
   SUPERADMIN = 'SUPERADMIN',
   CLINIC_ADMIN = 'CLINIC_ADMIN',
   EMPLOYEE = 'EMPLOYEE',
+  PRACTITIONER = 'PRACTITIONER',
 }
 
 registerEnumType(AuthUserRole, {

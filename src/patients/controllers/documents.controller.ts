@@ -26,6 +26,14 @@ export class DocumentsController {
       throw new BadRequestException('Aucun fichier n\'a été téléchargé');
     }
     
+    // Traitement manuel des tags si c'est une chaîne
+    if (createDocumentDto.tags && typeof createDocumentDto.tags === 'string') {
+      createDocumentDto.tags = (createDocumentDto.tags as any)
+        .split(',')
+        .map((tag: string) => tag.trim())
+        .filter((tag: string) => tag.length > 0);
+    }
+    
     const tenantId = req.user.tenantId;
     return this.documentsService.upload(file, createDocumentDto, tenantId);
   }

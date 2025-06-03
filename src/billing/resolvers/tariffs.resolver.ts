@@ -3,11 +3,11 @@ import { UseGuards } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tariff, TariffCategory } from '../entities';
-import { CreateTariffDto } from '../dto';
+import { CreateTariffGqlDto } from '../dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/enums/user-role.enum';
+import { AuthUserRole } from '../../auth/entities/user.entity';
 
 @Resolver(() => Tariff)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -18,7 +18,7 @@ export class TariffsResolver {
   ) {}
 
   @Query(() => [Tariff])
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.NURSE, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async tariffs(@Context() context) {
     return this.tariffRepository.find({
       where: { tenantId: context.req.user.tenantId },
@@ -26,7 +26,7 @@ export class TariffsResolver {
   }
 
   @Query(() => [Tariff])
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.NURSE, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async tariffsByCategory(
     @Args('category') category: TariffCategory,
     @Context() context,
@@ -40,9 +40,9 @@ export class TariffsResolver {
   }
 
   @Mutation(() => Tariff)
-  @Roles(UserRole.ADMIN)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN)
   async createTariff(
-    @Args('createTariffDto') createTariffDto: CreateTariffDto,
+    @Args('createTariffDto') createTariffDto: CreateTariffGqlDto,
     @Context() context,
   ) {
     const tariff = this.tariffRepository.create({

@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsEnum, IsArray, ValidateNested, IsInt, Min, Max, IsHexColor } from 'class-validator';
+import { IsString, IsEmail, IsEnum, IsArray, ValidateNested, IsInt, Min, Max, IsHexColor, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export enum Speciality {
@@ -52,8 +52,9 @@ export class CreatePractitionerDto {
   @IsEnum(Speciality)
   speciality: Speciality;
 
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
   @IsString()
   phoneNumber: string;

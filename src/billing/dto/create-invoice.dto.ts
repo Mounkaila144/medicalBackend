@@ -3,8 +3,40 @@ import { IsDate, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validato
 import { Transform, Type } from 'class-transformer';
 import { BillingAddressDto } from './billing-address.dto';
 
-@InputType()
 export class CreateInvoiceDto {
+  @IsUUID()
+  @IsNotEmpty()
+  patientId: string;
+
+  @IsString()
+  @IsOptional()
+  number?: string;
+
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  dueAt?: Date;
+
+  @IsUUID()
+  @IsOptional()
+  encounterId?: string;
+
+  @IsDate()
+  @Type(() => Date)
+  @IsOptional()
+  issueDate?: Date;
+
+  @IsOptional()
+  billingAddress?: BillingAddressDto;
+
+  @IsString()
+  @IsOptional()
+  notes?: string;
+}
+
+// GraphQL version for resolvers
+@InputType()
+export class CreateInvoiceGqlDto {
   @Field()
   @IsUUID()
   @IsNotEmpty()

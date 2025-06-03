@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, Patch } from '@nestjs/common';
 
 import { SchedulingService } from '../services/scheduling.service';
 import { CreateAppointmentDto } from '../dto/create-appointment.dto';
@@ -14,12 +14,61 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 export class AppointmentsController {
   constructor(private readonly schedulingService: SchedulingService) {}
 
+  @Get('test')
+  async test(): Promise<{ message: string }> {
+    return { message: 'Appointments controller is working' };
+  }
+
+  @Get('debug')
+  async debug(): Promise<{ message: string }> {
+    try {
+      return { message: 'Debug endpoint working' };
+    } catch (error) {
+      return { message: `Error: ${error.message}` };
+    }
+  }
+
   @Post()
   async create(
     @TenantId() tenantId: string,
     @Body() createAppointmentDto: CreateAppointmentDto,
   ): Promise<Appointment> {
-    return this.schedulingService.book(tenantId, createAppointmentDto);
+    console.log('Creating appointment with data:', {
+      tenantId,
+      ...createAppointmentDto,
+    });
+    return await this.schedulingService.book(tenantId, createAppointmentDto);
+  }
+
+  @Get()
+  async getAll(
+    @TenantId() tenantId: string,
+    @Query('date') dateString?: string,
+    @Query('practitionerId') practitionerId?: string,
+  ): Promise<Appointment[]> {
+    if (practitionerId && dateString) {
+      const date = new Date(dateString);
+      return this.schedulingService.listAgenda(tenantId, practitionerId, date);
+    }
+    // If no specific filters, return all appointments for the tenant
+    return this.schedulingService.getAllAppointments(tenantId, dateString);
+  }
+
+  @Get(':id')
+  async getById(
+    @TenantId() tenantId: string,
+    @Param('id') appointmentId: string,
+  ): Promise<Appointment> {
+    return this.schedulingService.getAppointmentById(tenantId, appointmentId);
+  }
+
+  @Patch(':id')
+  async update(
+    @TenantId() tenantId: string,
+    @Param('id') appointmentId: string,
+    @Body() updateData: Partial<CreateAppointmentDto>,
+  ): Promise<Appointment> {
+    return this.schedulingService.updateAppointment(tenantId, appointmentId, updateData);
   }
 
   @Put('reschedule')
@@ -32,6 +81,15 @@ export class AppointmentsController {
 
   @Post(':id/cancel')
   async cancel(
+    @TenantId() tenantId: string,
+    @Param('id') appointmentId: string,
+    @Body() cancelDto: CancelAppointmentDto,
+  ): Promise<Appointment> {
+    return this.schedulingService.cancel(tenantId, appointmentId, cancelDto);
+  }
+
+  @Patch(':id/cancel')
+  async cancelPatch(
     @TenantId() tenantId: string,
     @Param('id') appointmentId: string,
     @Body() cancelDto: CancelAppointmentDto,

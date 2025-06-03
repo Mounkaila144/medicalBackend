@@ -8,16 +8,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './entities/user.entity';
 import { Tenant } from './entities/tenant.entity';
 import { Session } from './entities/session.entity';
+import { Practitioner } from '../scheduling/entities/practitioner.entity';
 
 // Services
 import { AuthService } from './services/auth.service';
 import { UsersService } from './services/users.service';
 import { SuperadminService } from './services/superadmin.service';
+import { PractitionerAuthService } from './services/practitioner-auth.service';
 
 // Contrôleurs
 import { AuthController } from './controllers/auth.controller';
 import { AdminController } from './controllers/admin.controller';
 import { UsersController } from './controllers/users.controller';
+import { PractitionerAuthController } from './controllers/practitioner-auth.controller';
 
 // Stratégies
 import { LocalStrategy } from './strategies/local.strategy';
@@ -31,7 +34,7 @@ import { GqlRolesGuard } from './guards/gql-roles.guard';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Tenant, Session]),
+    TypeOrmModule.forFeature([User, Tenant, Session, Practitioner]),
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -42,11 +45,12 @@ import { GqlRolesGuard } from './guards/gql-roles.guard';
       }),
     }),
   ],
-  controllers: [AuthController, AdminController, UsersController],
+  controllers: [AuthController, AdminController, UsersController, PractitionerAuthController],
   providers: [
     AuthService,
     UsersService,
     SuperadminService,
+    PractitionerAuthService,
     LocalStrategy,
     JwtAccessStrategy,
     JwtRefreshStrategy,
@@ -58,6 +62,7 @@ import { GqlRolesGuard } from './guards/gql-roles.guard';
     AuthService, 
     UsersService, 
     SuperadminService, 
+    PractitionerAuthService,
     JwtAuthGuard, 
     RolesGuard, 
     GqlRolesGuard

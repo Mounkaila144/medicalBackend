@@ -1,0 +1,834 @@
+{
+  "name": "👥 Patients",
+  "description": "Gestion complète des patients et de leurs données",
+  "item": [
+    {
+      "name": "👥 Gestion Patients",
+      "item": [
+        {
+          "name": "Create Patient",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.id) {",
+                  "    pm.environment.set('patientId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"clinicId\": \"{{tenantId}}\",\n    \"mrn\": \"MRN001\",\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dob\": \"1980-05-15\",\n    \"gender\": \"M\",\n    \"bloodType\": \"A+\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phone\": \"0612345678\",\n    \"address\": {\n        \"street\": \"123 Rue Principale\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75001\",\n        \"country\": \"France\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients"
+              ]
+            },
+            "description": "Crée un nouveau dossier patient."
+          },
+          "response": [
+            {
+              "name": "201 - Créé",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"clinicId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"mrn\": \"MRN001\",\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dob\": \"1980-05-15\",\n    \"gender\": \"M\",\n    \"bloodType\": \"A+\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phone\": \"0612345678\",\n    \"address\": {\n        \"street\": \"123 Rue Principale\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75001\",\n        \"country\": \"France\"\n    }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/patients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"clinicId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"mrn\": \"MRN001\",\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dob\": \"1980-05-15\",\n    \"gender\": \"M\",\n    \"bloodType\": \"A+\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phone\": \"0612345678\",\n    \"address\": {\n        \"street\": \"123 Rue Principale\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75001\",\n        \"country\": \"France\"\n    },\n    \"createdAt\": \"2023-06-15T16:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T16:30:00.000Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get All Patients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/patients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients"
+              ]
+            },
+            "description": "Récupère la liste de tous les patients."
+          },
+          "response": [
+            {
+              "name": "200 - Succès",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n        \"firstName\": \"Jean\",\n        \"lastName\": \"Dupont\",\n        \"dob\": \"1980-05-15\",\n        \"gender\": \"M\",\n        \"email\": \"jean.dupont@exemple.com\",\n        \"phone\": \"0612345678\"\n    }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Search Patients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/patients/search?search=Dupont&page=1&limit=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Dupont",
+                  "description": "Recherche par nom, prénom ou email"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Numéro de la page"
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "description": "Nombre d'éléments par page"
+                }
+              ]
+            },
+            "description": "Recherche des patients avec pagination et filtrage."
+          },
+          "response": [
+            {
+              "name": "200 - Succès",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/search?search=Dupont",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "search"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "Dupont"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n        \"firstName\": \"Jean\",\n        \"lastName\": \"Dupont\",\n        \"dob\": \"1980-05-15\",\n        \"gender\": \"M\",\n        \"email\": \"jean.dupont@exemple.com\",\n        \"phone\": \"0612345678\"\n    }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Get Patient by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/patients/{{patientId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "{{patientId}}"
+              ]
+            },
+            "description": "Récupère les détails d'un patient par son identifiant."
+          },
+          "response": [
+            {
+              "name": "200 - Succès",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "550e8400-e29b-41d4-a716-446655440010"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"clinicId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"mrn\": \"MRN001\",\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dob\": \"1980-05-15\",\n    \"gender\": \"M\",\n    \"bloodType\": \"A+\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phone\": \"0612345678\",\n    \"address\": {\n        \"street\": \"123 Rue Principale\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75001\",\n        \"country\": \"France\"\n    },\n    \"createdAt\": \"2023-06-15T16:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T16:30:00.000Z\",\n    \"medicalHistory\": [],\n    \"documents\": []\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Patient",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"phone\": \"0687654321\",\n    \"address\": {\n        \"street\": \"456 Avenue des Champs-Élysées\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75008\",\n        \"country\": \"France\"\n    }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patients/{{patientId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "{{patientId}}"
+              ]
+            },
+            "description": "Met à jour les informations d'un patient existant."
+          },
+          "response": [
+            {
+              "name": "200 - Succès",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phone\": \"0687654321\",\n    \"address\": {\n        \"street\": \"456 Avenue des Champs-Élysées\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75008\",\n        \"country\": \"France\"\n    }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "550e8400-e29b-41d4-a716-446655440010"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"clinicId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"mrn\": \"MRN001\",\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dob\": \"1980-05-15\",\n    \"gender\": \"M\",\n    \"bloodType\": \"A+\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phone\": \"0687654321\",\n    \"address\": {\n        \"street\": \"456 Avenue des Champs-Élysées\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75008\",\n        \"country\": \"France\"\n    },\n    \"createdAt\": \"2023-06-15T16:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T17:30:00.000Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Patient",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/patients/{{patientId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "{{patientId}}"
+              ]
+            },
+            "description": "Archive un patient existant (soft delete)."
+          },
+          "response": [
+            {
+              "name": "204 - Succès (No Content)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "550e8400-e29b-41d4-a716-446655440010"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📄 Documents",
+      "item": [
+        {
+          "name": "Upload Patient Document",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.id) {",
+                  "    pm.environment.set('documentId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/path/to/document.pdf",
+                  "description": "Fichier PDF à télécharger"
+                },
+                {
+                  "key": "patientId",
+                  "value": "{{patientId}}",
+                  "description": "ID du patient",
+                  "type": "text"
+                },
+                {
+                  "key": "documentType",
+                  "value": "MEDICAL_REPORT",
+                  "description": "Type de document",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Rapport médical annuel",
+                  "description": "Description du document",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patients/documents/upload",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "documents",
+                "upload"
+              ]
+            },
+            "description": "Télécharge un document (PDF) pour un patient."
+          },
+          "response": [
+            {
+              "name": "201 - Créé",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": "/path/to/document.pdf"
+                    },
+                    {
+                      "key": "patientId",
+                      "value": "550e8400-e29b-41d4-a716-446655440010",
+                      "type": "text"
+                    },
+                    {
+                      "key": "documentType",
+                      "value": "MEDICAL_REPORT",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Rapport médical annuel",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/patients/documents/upload",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "documents",
+                    "upload"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440020\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"fileName\": \"document_1623771000.pdf\",\n    \"fileSize\": 1024567,\n    \"mimeType\": \"application/pdf\",\n    \"documentType\": \"MEDICAL_REPORT\",\n    \"description\": \"Rapport médical annuel\",\n    \"uploadedAt\": \"2023-06-15T18:30:00.000Z\",\n    \"createdAt\": \"2023-06-15T18:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T18:30:00.000Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Patient Documents",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/patients/documents/patient/{{patientId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "documents",
+                "patient",
+                "{{patientId}}"
+              ]
+            },
+            "description": "Récupère la liste des documents d'un patient."
+          },
+          "response": [
+            {
+              "name": "200 - Succès",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/documents/patient/550e8400-e29b-41d4-a716-446655440010",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "documents",
+                    "patient",
+                    "550e8400-e29b-41d4-a716-446655440010"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440020\",\n        \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n        \"fileName\": \"document_1623771000.pdf\",\n        \"fileSize\": 1024567,\n        \"mimeType\": \"application/pdf\",\n        \"documentType\": \"MEDICAL_REPORT\",\n        \"description\": \"Rapport médical annuel\",\n        \"uploadedAt\": \"2023-06-15T18:30:00.000Z\"\n    }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Delete Document",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/patients/documents/{{documentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "documents",
+                "{{documentId}}"
+              ]
+            },
+            "description": "Supprime un document patient."
+          },
+          "response": [
+            {
+              "name": "204 - Succès (No Content)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/documents/550e8400-e29b-41d4-a716-446655440020",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "documents",
+                    "550e8400-e29b-41d4-a716-446655440020"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🏥 Historique Médical",
+      "item": [
+        {
+          "name": "Add Medical History Item",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData && jsonData.id) {",
+                  "    pm.environment.set('medicalHistoryItemId', jsonData.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"patientId\": \"{{patientId}}\",\n    \"type\": \"ALLERGY\",\n    \"label\": \"Pénicilline\",\n    \"note\": \"Réaction allergique sévère\",\n    \"recordedAt\": \"2023-06-15T10:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/patients/medical-history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "medical-history"
+              ]
+            },
+            "description": "Ajoute un élément à l'historique médical d'un patient."
+          },
+          "response": [
+            {
+              "name": "201 - Créé",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"type\": \"ALLERGY\",\n    \"label\": \"Pénicilline\",\n    \"note\": \"Réaction allergique sévère\",\n    \"recordedAt\": \"2023-06-15T10:00:00.000Z\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/patients/medical-history",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "medical-history"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440030\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"type\": \"ALLERGY\",\n    \"label\": \"Pénicilline\",\n    \"note\": \"Réaction allergique sévère\",\n    \"recordedAt\": \"2023-06-15T10:00:00.000Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Get Patient Medical History",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/patients/medical-history/patient/{{patientId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "medical-history",
+                "patient",
+                "{{patientId}}"
+              ]
+            },
+            "description": "Récupère l'historique médical d'un patient."
+          },
+          "response": [
+            {
+              "name": "200 - Succès",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/medical-history/patient/550e8400-e29b-41d4-a716-446655440010",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "medical-history",
+                    "patient",
+                    "550e8400-e29b-41d4-a716-446655440010"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "cookie": [],
+              "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440030\",\n        \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n        \"type\": \"ALLERGY\",\n        \"label\": \"Pénicilline\",\n        \"note\": \"Réaction allergique sévère\",\n        \"recordedAt\": \"2023-06-15T10:00:00.000Z\"\n    }\n]"
+            }
+          ]
+        },
+        {
+          "name": "Delete Medical History Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/patients/medical-history/{{medicalHistoryItemId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "patients",
+                "medical-history",
+                "{{medicalHistoryItemId}}"
+              ]
+            },
+            "description": "Supprime un élément de l'historique médical."
+          },
+          "response": [
+            {
+              "name": "204 - Succès (No Content)",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/medical-history/550e8400-e29b-41d4-a716-446655440030",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "medical-history",
+                    "550e8400-e29b-41d4-a716-446655440030"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "text",
+              "header": [],
+              "cookie": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+} 

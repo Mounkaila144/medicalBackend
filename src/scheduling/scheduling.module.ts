@@ -15,8 +15,10 @@ import { PractitionersService } from './services/practitioners.service';
 import { AppointmentsController } from './controllers/appointments.controller';
 import { WaitQueueController } from './controllers/wait-queue.controller';
 import { PractitionersController } from './controllers/practitioners.controller';
+import { PractitionerScheduleController } from './controllers/practitioner-schedule.controller';
 
 import { AgendaResolver } from './resolvers/agenda.resolver';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { AgendaResolver } from './resolvers/agenda.resolver';
     ]),
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
+    AuthModule,
   ],
   providers: [
     SchedulingService,
@@ -39,6 +42,7 @@ import { AgendaResolver } from './resolvers/agenda.resolver';
     AppointmentsController,
     WaitQueueController,
     PractitionersController,
+    PractitionerScheduleController,
   ],
   exports: [
     SchedulingService,

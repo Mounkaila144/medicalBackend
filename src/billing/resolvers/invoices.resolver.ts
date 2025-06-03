@@ -4,11 +4,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Invoice } from '../entities';
 import { InvoicingService } from '../services';
-import { CreateInvoiceDto, AddInvoiceLineDto, UpdateInvoiceStatusDto } from '../dto';
+import { CreateInvoiceGqlDto, AddInvoiceLineGqlDto, UpdateInvoiceStatusDto } from '../dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
-import { UserRole } from '../../common/enums/user-role.enum';
+import { AuthUserRole } from '../../auth/entities/user.entity';
 
 @Resolver(() => Invoice)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -20,7 +20,7 @@ export class InvoicesResolver {
   ) {}
 
   @Query(() => [Invoice])
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async invoices(@Context() context) {
     return this.invoiceRepository.find({
       where: { tenantId: context.req.user.tenantId },
@@ -29,7 +29,7 @@ export class InvoicesResolver {
   }
 
   @Query(() => Invoice)
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async invoice(@Args('id') id: string, @Context() context) {
     return this.invoiceRepository.findOne({
       where: { id, tenantId: context.req.user.tenantId },
@@ -38,25 +38,25 @@ export class InvoicesResolver {
   }
 
   @Mutation(() => Invoice)
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async createInvoice(
-    @Args('createInvoiceDto') createInvoiceDto: CreateInvoiceDto,
+    @Args('createInvoiceDto') createInvoiceDto: CreateInvoiceGqlDto,
     @Context() context,
   ) {
     return this.invoicingService.createDraft(context.req.user.tenantId, createInvoiceDto);
   }
 
   @Mutation(() => Invoice)
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async addInvoiceLine(
-    @Args('addLineDto') addLineDto: AddInvoiceLineDto,
+    @Args('addLineDto') addLineDto: AddInvoiceLineGqlDto,
     @Context() context,
   ) {
     return this.invoicingService.addLine(context.req.user.tenantId, addLineDto);
   }
 
   @Mutation(() => Invoice)
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async sendInvoice(
     @Args('updateStatusDto') updateStatusDto: UpdateInvoiceStatusDto,
     @Context() context,
@@ -65,7 +65,7 @@ export class InvoicesResolver {
   }
 
   @Mutation(() => Invoice)
-  @Roles(UserRole.ADMIN, UserRole.DOCTOR, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async markInvoicePaid(
     @Args('updateStatusDto') updateStatusDto: UpdateInvoiceStatusDto,
     @Context() context,
@@ -74,7 +74,7 @@ export class InvoicesResolver {
   }
 
   @Mutation(() => [Invoice])
-  @Roles(UserRole.ADMIN, UserRole.RECEPTIONIST)
+  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async remindOverdueInvoices(@Context() context) {
     return this.invoicingService.remindOverdue(context.req.user.tenantId);
   }

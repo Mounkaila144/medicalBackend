@@ -12,6 +12,14 @@ import { TenantGuard } from '../../common/guards/tenant.guard';
 export class WaitQueueController {
   constructor(private readonly waitQueueService: WaitQueueService) {}
 
+  @Post()
+  async addToQueue(
+    @TenantId() tenantId: string,
+    @Body() createDto: CreateWaitQueueEntryDto,
+  ): Promise<WaitQueueEntry> {
+    return this.waitQueueService.enqueue(tenantId, createDto);
+  }
+
   @Post('enqueue')
   async enqueue(
     @TenantId() tenantId: string,

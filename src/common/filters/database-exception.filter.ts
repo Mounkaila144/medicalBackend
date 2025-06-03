@@ -18,6 +18,11 @@ export class DatabaseExceptionFilter implements ExceptionFilter {
     const pgError: any = exception;
     const pgErrorCode = pgError?.code;
 
+    // Log the actual error for debugging
+    console.error('Database error:', exception);
+    console.error('Error code:', pgErrorCode);
+    console.error('Error message:', exception.message);
+
     // Gérer différents types d'erreurs SQL
     switch (pgErrorCode) {
       case '23505': // Violation de contrainte d'unicité
@@ -53,6 +58,11 @@ export class DatabaseExceptionFilter implements ExceptionFilter {
         }
         
         error = 'Invalid Input';
+        break;
+        
+      default:
+        // For unknown errors, include the original message for debugging
+        message = `Erreur de base de données: ${exception.message}`;
         break;
     }
 

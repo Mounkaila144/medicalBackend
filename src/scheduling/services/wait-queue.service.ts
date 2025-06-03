@@ -41,6 +41,9 @@ export class WaitQueueService {
     const entry = this.waitQueueRepository.create({
       tenantId,
       patientId: createDto.patientId,
+      practitionerId: createDto.practitionerId,
+      priority: createDto.priority,
+      reason: createDto.reason,
       rank: nextRank,
     });
 

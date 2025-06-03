@@ -1,0 +1,2867 @@
+{
+  "info": {
+    "_postman_id": "bcc98355-4dd1-4ec5-822e-4f599815904c",
+    "name": "🏥 Medical System - Complete API",
+    "description": "Collection complète et élégante regroupant toutes les APIs du système médical NestJS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "medical-system-api"
+  },
+  "item": [
+    {
+      "name": "🔐 Authentication",
+      "description": "Authentification, gestion des utilisateurs et sécurité",
+      "item": [
+        {
+          "name": "🔑 Connexion",
+          "item": [
+            {
+              "name": "Login",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.accessToken) {",
+                      "    pm.environment.set('accessToken', jsonData.accessToken);",
+                      "}",
+                      "if (jsonData.refreshToken) {",
+                      "    pm.environment.set('refreshToken', jsonData.refreshToken);",
+                      "}",
+                      "if (jsonData.user && jsonData.user.tenantId) {",
+                      "    pm.environment.set('tenantId', jsonData.user.tenantId);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/login",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "login"
+                  ]
+                },
+                "description": "Authentification d'un utilisateur avec email et mot de passe."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/login",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "login"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"email\": \"admin@example.com\",\n        \"role\": \"CLINIC_ADMIN\",\n        \"firstName\": \"Admin\",\n        \"lastName\": \"User\",\n        \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\"\n    }\n}"
+                },
+                {
+                  "name": "401 - Non autorisé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"wrong_password\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/login",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "login"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 401,\n    \"message\": \"Email ou mot de passe incorrect\",\n    \"error\": \"Unauthorized\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Refresh Token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.accessToken) {",
+                      "    pm.environment.set('accessToken', jsonData.accessToken);",
+                      "}",
+                      "if (jsonData.refreshToken) {",
+                      "    pm.environment.set('refreshToken', jsonData.refreshToken);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{refreshToken}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/auth/refresh",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "refresh"
+                  ]
+                },
+                "description": "Rafraîchit le token d'accès en utilisant le refresh token dans le header Authorization."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/refresh",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "refresh"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n    \"user\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440000\",\n        \"email\": \"admin@example.com\",\n        \"role\": \"CLINIC_ADMIN\",\n        \"firstName\": \"Admin\",\n        \"lastName\": \"User\"\n    }\n}"
+                },
+                {
+                  "name": "401 - Non autorisé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer invalid_token",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/refresh",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "refresh"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 401,\n    \"message\": \"Token de rafraîchissement invalide\",\n    \"error\": \"Unauthorized\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Logout",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/auth/logout",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "logout"
+                  ]
+                },
+                "description": "Déconnecte l'utilisateur et invalide le token de rafraîchissement."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/auth/logout",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "logout"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"success\": true,\n    \"removedSessions\": 1\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "🏢 Administration Tenants",
+          "item": [
+            {
+              "name": "Get All Tenants",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/tenants",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "tenants"
+                  ]
+                },
+                "description": "Récupère la liste de tous les tenants (réservé aux superadmins)."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/admin/tenants",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "tenants"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"name\": \"Clinique Exemple\",\n        \"slug\": \"clinique-exemple\",\n        \"isActive\": true,\n        \"createdAt\": \"2023-06-15T10:30:00.000Z\",\n        \"updatedAt\": \"2023-06-15T10:30:00.000Z\"\n    }\n]"
+                }
+              ]
+            },
+            {
+              "name": "Create Tenant",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.tenant && jsonData.tenant.id) {",
+                      "    pm.environment.set('tenantId', jsonData.tenant.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"adminEmail\": \"admin@clinique-exemple.com\",\n    \"adminPassword\": \"password123\",\n    \"adminFirstName\": \"Admin\",\n    \"adminLastName\": \"Clinique\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/tenants",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "tenants"
+                  ]
+                },
+                "description": "Crée un nouveau tenant avec son administrateur (réservé aux superadmins)."
+              },
+              "response": [
+                {
+                  "name": "201 - Créé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"adminEmail\": \"admin@clinique-exemple.com\",\n    \"adminPassword\": \"password123\",\n    \"adminFirstName\": \"Admin\",\n    \"adminLastName\": \"Clinique\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/admin/tenants",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "tenants"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"tenant\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"name\": \"Clinique Exemple\",\n        \"slug\": \"clinique-exemple\",\n        \"isActive\": true,\n        \"createdAt\": \"2023-06-15T10:30:00.000Z\",\n        \"updatedAt\": \"2023-06-15T10:30:00.000Z\"\n    },\n    \"admin\": {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440002\",\n        \"email\": \"admin@clinique-exemple.com\",\n        \"role\": \"CLINIC_ADMIN\",\n        \"firstName\": \"Admin\",\n        \"lastName\": \"Clinique\"\n    }\n}"
+                }
+              ]
+            },
+            {
+              "name": "Deactivate Tenant",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/tenants/{{tenantId}}/deactivate",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "tenants",
+                    "{{tenantId}}",
+                    "deactivate"
+                  ]
+                },
+                "description": "Désactive un tenant existant (réservé aux superadmins)."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/admin/tenants/550e8400-e29b-41d4-a716-446655440001/deactivate",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "tenants",
+                        "550e8400-e29b-41d4-a716-446655440001",
+                        "deactivate"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"isActive\": false,\n    \"deactivatedAt\": \"2023-06-15T12:30:00.000Z\",\n    \"createdAt\": \"2023-06-15T10:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T12:30:00.000Z\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Reactivate Tenant",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/tenants/{{tenantId}}/reactivate",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "tenants",
+                    "{{tenantId}}",
+                    "reactivate"
+                  ]
+                },
+                "description": "Réactive un tenant désactivé (réservé aux superadmins)."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/admin/tenants/550e8400-e29b-41d4-a716-446655440001/reactivate",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "admin",
+                        "tenants",
+                        "550e8400-e29b-41d4-a716-446655440001",
+                        "reactivate"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"name\": \"Clinique Exemple\",\n    \"slug\": \"clinique-exemple\",\n    \"isActive\": true,\n    \"deactivatedAt\": null,\n    \"createdAt\": \"2023-06-15T10:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T14:30:00.000Z\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "👤 Utilisateurs",
+          "item": [
+            {
+              "name": "Create User",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.id) {",
+                      "    pm.environment.set('userId', jsonData.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"employee@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                },
+                "description": "Crée un nouvel utilisateur (réservé aux superadmins et admins de clinique)."
+              },
+              "response": [
+                {
+                  "name": "201 - Créé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"email\": \"employee@example.com\",\n    \"password\": \"password123\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/users",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440003\",\n    \"email\": \"employee@example.com\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"isActive\": true,\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T15:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T15:30:00.000Z\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Get All Users",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                },
+                "description": "Récupère la liste de tous les utilisateurs du tenant."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "[\n    {\n        \"id\": \"550e8400-e29b-41d4-a716-446655440003\",\n        \"email\": \"employee@example.com\",\n        \"role\": \"EMPLOYEE\",\n        \"firstName\": \"John\",\n        \"lastName\": \"Doe\",\n        \"isActive\": true,\n        \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n        \"createdAt\": \"2023-06-15T15:30:00.000Z\",\n        \"updatedAt\": \"2023-06-15T15:30:00.000Z\"\n    }\n]"
+                }
+              ]
+            },
+            {
+              "name": "Get User by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/{{userId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "{{userId}}"
+                  ]
+                },
+                "description": "Récupère un utilisateur par son ID."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/550e8400-e29b-41d4-a716-446655440003",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "550e8400-e29b-41d4-a716-446655440003"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440003\",\n    \"email\": \"employee@example.com\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"isActive\": true,\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T15:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T15:30:00.000Z\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Update User",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/users/{{userId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "{{userId}}"
+                  ]
+                },
+                "description": "Met à jour les informations d'un utilisateur."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/users/550e8400-e29b-41d4-a716-446655440003",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "550e8400-e29b-41d4-a716-446655440003"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440003\",\n    \"email\": \"employee@example.com\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"isActive\": true,\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T15:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T16:30:00.000Z\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Deactivate User",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/users/{{userId}}/deactivate",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users",
+                    "{{userId}}",
+                    "deactivate"
+                  ]
+                },
+                "description": "Désactive un utilisateur existant (réservé aux superadmins et admins de clinique)."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/users/550e8400-e29b-41d4-a716-446655440003/deactivate",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "users",
+                        "550e8400-e29b-41d4-a716-446655440003",
+                        "deactivate"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440003\",\n    \"email\": \"employee@example.com\",\n    \"role\": \"EMPLOYEE\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"isActive\": false,\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T15:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T16:30:00.000Z\"\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "👥 Patients",
+      "description": "Gestion complète des patients et de leurs données",
+      "item": [
+        {
+          "name": "👥 Gestion Patients",
+          "item": [
+            {
+              "name": "Create Patient",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.id) {",
+                      "    pm.environment.set('patientId', jsonData.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dateOfBirth\": \"1980-05-15\",\n    \"gender\": \"MALE\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phoneNumber\": \"0612345678\",\n    \"address\": {\n        \"street\": \"123 Rue Principale\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75001\",\n        \"country\": \"France\"\n    },\n    \"insuranceInfo\": {\n        \"provider\": \"CPAM\",\n        \"policyNumber\": \"1234567890\",\n        \"expiryDate\": \"2025-12-31\"\n    },\n    \"medicalHistory\": {\n        \"allergies\": [\"Pénicilline\", \"Arachides\"],\n        \"chronicConditions\": [\"Asthme\"],\n        \"currentMedications\": [\"Ventoline 100mcg\"]\n    },\n    \"emergencyContact\": {\n        \"name\": \"Marie Dupont\",\n        \"relationship\": \"Épouse\",\n        \"phoneNumber\": \"0698765432\"\n    }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/patients",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients"
+                  ]
+                },
+                "description": "Crée un nouveau dossier patient."
+              },
+              "response": [
+                {
+                  "name": "201 - Créé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dateOfBirth\": \"1980-05-15\",\n    \"gender\": \"MALE\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phoneNumber\": \"0612345678\",\n    \"address\": {\n        \"street\": \"123 Rue Principale\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75001\",\n        \"country\": \"France\"\n    },\n    \"insuranceInfo\": {\n        \"provider\": \"CPAM\",\n        \"policyNumber\": \"1234567890\",\n        \"expiryDate\": \"2025-12-31\"\n    },\n    \"medicalHistory\": {\n        \"allergies\": [\"Pénicilline\", \"Arachides\"],\n        \"chronicConditions\": [\"Asthme\"],\n        \"currentMedications\": [\"Ventoline 100mcg\"]\n    },\n    \"emergencyContact\": {\n        \"name\": \"Marie Dupont\",\n        \"relationship\": \"Épouse\",\n        \"phoneNumber\": \"0698765432\"\n    }\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/patients",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dateOfBirth\": \"1980-05-15\",\n    \"gender\": \"MALE\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phoneNumber\": \"0612345678\",
+                    \"address\": {\n        \"street\": \"123 Rue Principale\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75001\",\n        \"country\": \"France\"\n    },\n    \"insuranceInfo\": {\n        \"provider\": \"CPAM\",\n        \"policyNumber\": \"1234567890\",\n        \"expiryDate\": \"2025-12-31\"\n    },\n    \"medicalHistory\": {\n        \"allergies\": [\"Pénicilline\", \"Arachides\"],\n        \"chronicConditions\": [\"Asthme\"],\n        \"currentMedications\": [\"Ventoline 100mcg\"]\n    },\n    \"emergencyContact\": {\n        \"name\": \"Marie Dupont\",\n        \"relationship\": \"Épouse\",\n        \"phoneNumber\": \"0698765432\"\n    },\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T16:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T16:30:00.000Z\"\n}"
+                },
+                {
+                  "name": "401 - Non authentifié",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/patients",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 401,\n    \"message\": \"Non authentifié\",\n    \"error\": \"Unauthorized\"\n}"
+                },
+                {
+                  "name": "403 - Interdit",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/patients",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients"
+                      ]
+                    }
+                  },
+                  "status": "Forbidden",
+                  "code": 403,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 403,\n    \"message\": \"Accès non autorisé\",\n    \"error\": \"Forbidden\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Get Patients",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients?search=Dupont",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients"
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "Dupont",
+                      "description": "Recherche par nom, prénom ou email"
+                    },
+                    {
+                      "key": "page",
+                      "value": "1",
+                      "description": "Numéro de la page",
+                      "disabled": true
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10",
+                      "description": "Nombre d'éléments par page",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "Recherche des patients avec pagination et filtrage."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients?search=Dupont",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients"
+                      ],
+                      "query": [
+                        {
+                          "key": "search",
+                          "value": "Dupont"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"items\": [\n        {\n            \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n            \"firstName\": \"Jean\",\n            \"lastName\": \"Dupont\",\n            \"dateOfBirth\": \"1980-05-15\",\n            \"gender\": \"MALE\",\n            \"email\": \"jean.dupont@exemple.com\",\n            \"phoneNumber\": \"0612345678\"\n        }\n    ],\n    \"meta\": {\n        \"totalItems\": 1,\n        \"itemCount\": 1,\n        \"itemsPerPage\": 10,\n        \"totalPages\": 1,\n        \"currentPage\": 1\n    }\n}"
+                },
+                {
+                  "name": "401 - Non authentifié",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients?search=Dupont",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients"
+                      ],
+                      "query": [
+                        {
+                          "key": "search",
+                          "value": "Dupont"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 401,\n    \"message\": \"Non authentifié\",\n    \"error\": \"Unauthorized\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Get Patient by ID",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/{{patientId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "{{patientId}}"
+                  ]
+                },
+                "description": "Récupère les détails d'un patient par son identifiant."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440010"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dateOfBirth\": \"1980-05-15\",\n    \"gender\": \"MALE\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phoneNumber\": \"0612345678\",\n    \"address\": {\n        \"street\": \"123 Rue Principale\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75001\",\n        \"country\": \"France\"\n    },\n    \"insuranceInfo\": {\n        \"provider\": \"CPAM\",\n        \"policyNumber\": \"1234567890\",\n        \"expiryDate\": \"2025-12-31\"\n    },\n    \"medicalHistory\": {\n        \"allergies\": [\"Pénicilline\", \"Arachides\"],\n        \"chronicConditions\": [\"Asthme\"],\n        \"currentMedications\": [\"Ventoline 100mcg\"]\n    },\n    \"emergencyContact\": {\n        \"name\": \"Marie Dupont\",\n        \"relationship\": \"Épouse\",\n        \"phoneNumber\": \"0698765432\"\n    },\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T16:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T16:30:00.000Z\"\n}"
+                },
+                {
+                  "name": "404 - Non trouvé",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440999",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440999"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 404,\n    \"message\": \"Patient non trouvé\",\n    \"error\": \"Not Found\"\n}"
+                },
+                {
+                  "name": "401 - Non authentifié",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440010"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 401,\n    \"message\": \"Non authentifié\",\n    \"error\": \"Unauthorized\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Update Patient",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"phoneNumber\": \"0687654321\",\n    \"address\": {\n        \"street\": \"456 Avenue des Champs-Élysées\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75008\",\n        \"country\": \"France\"\n    },\n    \"medicalHistory\": {\n        \"allergies\": [\"Pénicilline\", \"Arachides\", \"Fruits de mer\"],\n        \"chronicConditions\": [\"Asthme\", \"Hypertension\"]\n    }\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/patients/{{patientId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "{{patientId}}"
+                  ]
+                },
+                "description": "Met à jour les informations d'un patient existant."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"phoneNumber\": \"0687654321\",\n    \"address\": {\n        \"street\": \"456 Avenue des Champs-Élysées\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75008\",\n        \"country\": \"France\"\n    },\n    \"medicalHistory\": {\n        \"allergies\": [\"Pénicilline\", \"Arachides\", \"Fruits de mer\"],\n        \"chronicConditions\": [\"Asthme\", \"Hypertension\"]\n    }\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440010"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"firstName\": \"Jean\",\n    \"lastName\": \"Dupont\",\n    \"dateOfBirth\": \"1980-05-15\",\n    \"gender\": \"MALE\",\n    \"email\": \"jean.dupont@exemple.com\",\n    \"phoneNumber\": \"0687654321\",\n    \"address\": {\n        \"street\": \"456 Avenue des Champs-Élysées\",\n        \"city\": \"Paris\",\n        \"postalCode\": \"75008\",\n        \"country\": \"France\"\n    },\n    \"insuranceInfo\": {\n        \"provider\": \"CPAM\",\n        \"policyNumber\": \"1234567890\",\n        \"expiryDate\": \"2025-12-31\"\n    },\n    \"medicalHistory\": {\n        \"allergies\": [\"Pénicilline\", \"Arachides\", \"Fruits de mer\"],\n        \"chronicConditions\": [\"Asthme\", \"Hypertension\"],\n        \"currentMedications\": [\"Ventoline 100mcg\"]\n    },\n    \"emergencyContact\": {\n        \"name\": \"Marie Dupont\",\n        \"relationship\": \"Épouse\",\n        \"phoneNumber\": \"0698765432\"\n    },\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T16:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T17:30:00.000Z\"\n}"
+                },
+                {
+                  "name": "404 - Non trouvé",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"phoneNumber\": \"0687654321\"\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440999",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440999"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 404,\n    \"message\": \"Patient non trouvé\",\n    \"error\": \"Not Found\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Delete Patient",
+              "request": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/{{patientId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "{{patientId}}"
+                  ]
+                },
+                "description": "Supprime un patient existant."
+              },
+              "response": [
+                {
+                  "name": "204 - Succès (No Content)",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440010"
+                      ]
+                    }
+                  },
+                  "status": "No Content",
+                  "code": 204,
+                  "_postman_previewlanguage": "text",
+                  "header": [],
+                  "cookie": [],
+                  "body": ""
+                },
+                {
+                  "name": "404 - Non trouvé",
+                  "originalRequest": {
+                    "method": "DELETE",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440999",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440999"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 404,\n    \"message\": \"Patient non trouvé\",\n    \"error\": \"Not Found\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "📄 Documents",
+          "item": [
+            {
+              "name": "Upload Patient Document",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "file",
+                      "type": "file",
+                      "src": "/path/to/document.pdf",
+                      "description": "Fichier PDF à télécharger"
+                    },
+                    {
+                      "key": "documentType",
+                      "value": "MEDICAL_REPORT",
+                      "description": "Type de document",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Rapport médical annuel",
+                      "description": "Description du document",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/patients/{{patientId}}/documents",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "{{patientId}}",
+                    "documents"
+                  ]
+                },
+                "description": "Télécharge un document (PDF) pour un patient."
+              },
+              "response": [
+                {
+                  "name": "201 - Créé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "file",
+                          "type": "file",
+                          "src": "/path/to/document.pdf"
+                        },
+                        {
+                          "key": "documentType",
+                          "value": "MEDICAL_REPORT",
+                          "type": "text"
+                        },
+                        {
+                          "key": "description",
+                          "value": "Rapport médical annuel",
+                          "type": "text"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010/documents",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440010",
+                        "documents"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440020\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"fileName\": \"document_1623771000.pdf\",\n    \"fileSize\": 1024567,\n    \"mimeType\": \"application/pdf\",\n    \"documentType\": \"MEDICAL_REPORT\",\n    \"description\": \"Rapport médical annuel\",\n    \"uploadedBy\": \"550e8400-e29b-41d4-a716-446655440002\",\n    \"uploadedAt\": \"2023-06-15T18:30:00.000Z\",\n    \"createdAt\": \"2023-06-15T18:30:00.000Z\",\n    \"updatedAt\": \"2023-06-15T18:30:00.000Z\",\n    \"url\": \"/api/documents/550e8400-e29b-41d4-a716-446655440020\"\n}"
+                },
+                {
+                  "name": "400 - Requête invalide",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "file",
+                          "type": "file",
+                          "src": "/path/to/document.txt"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010/documents",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440010",
+                        "documents"
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 400,\n    \"message\": \"Le fichier doit être au format PDF\",\n    \"error\": \"Bad Request\"\n}"
+                },
+                {
+                  "name": "404 - Patient non trouvé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [
+                        {
+                          "key": "file",
+                          "type": "file",
+                          "src": "/path/to/document.pdf"
+                        }
+                      ]
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440999/documents",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440999",
+                        "documents"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 404,\n    \"message\": \"Patient non trouvé\",\n    \"error\": \"Not Found\"\n}"
+                }
+              ],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.id) {",
+                      "    pm.environment.set('patientId', jsonData.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Get Patient Documents",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/patients/{{patientId}}/documents",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "patients",
+                    "{{patientId}}",
+                    "documents"
+                  ]
+                },
+                "description": "Récupère la liste des documents d'un patient."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440010/documents",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440010",
+                        "documents"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"items\": [\n        {\n            \"id\": \"550e8400-e29b-41d4-a716-446655440020\",\n            \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n            \"fileName\": \"document_1623771000.pdf\",\n            \"fileSize\": 1024567,\n            \"mimeType\": \"application/pdf\",\n            \"documentType\": \"MEDICAL_REPORT\",\n            \"description\": \"Rapport médical annuel\",\n            \"uploadedBy\": \"550e8400-e29b-41d4-a716-446655440002\",\n            \"uploadedAt\": \"2023-06-15T18:30:00.000Z\",\n            \"url\": \"/api/documents/550e8400-e29b-41d4-a716-446655440020\"\n        }\n    ],\n    \"meta\": {\n        \"totalItems\": 1,\n        \"itemCount\": 1,\n        \"itemsPerPage\": 10,\n        \"totalPages\": 1,\n        \"currentPage\": 1\n    }\n}"
+                },
+                {
+                  "name": "404 - Patient non trouvé",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrl}}/patients/550e8400-e29b-41d4-a716-446655440999/documents",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "patients",
+                        "550e8400-e29b-41d4-a716-446655440999",
+                        "documents"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 404,\n    \"message\": \"Patient non trouvé\",\n    \"error\": \"Not Found\"\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📅 Scheduling",
+      "description": "Gestion des rendez-vous, planning et file d'attente",
+      "item": [
+        {
+          "name": "➕ Création",
+          "item": [
+            {
+              "name": "Create Practitioner",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.id) {",
+                      "    pm.environment.set('practitionerId', jsonData.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"email\": \"pierre.martin@clinique.fr\",\n    \"phoneNumber\": \"0612345678\",\n    \"workingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"17:00\" }\n            ]\n        }\n    ],\n    \"slotDuration\": 20,\n    \"color\": \"#4285F4\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/practitioners",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "practitioners"
+                  ]
+                },
+                "description": "Crée un nouveau praticien avec ses horaires de travail."
+              },
+              "response": [
+                {
+                  "name": "201 - Créé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"email\": \"pierre.martin@clinique.fr\",\n    \"phoneNumber\": \"0612345678\",\n    \"workingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"17:00\" }\n            ]\n        }\n    ],\n    \"slotDuration\": 20,\n    \"color\": \"#4285F4\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/practitioners",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "practitioners"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"GENERAL_MEDICINE\",\n    \"email\": \"pierre.martin@clinique.fr\",\n    \"phoneNumber\": \"0612345678\",\n    \"workingHours\": [\n        {\n            \"dayOfWeek\": \"MONDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"TUESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"WEDNESDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"THURSDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"18:00\" }\n            ]\n        },\n        {\n            \"dayOfWeek\": \"FRIDAY\",\n            \"slots\": [\n                { \"start\": \"09:00\", \"end\": \"12:00\" },\n                { \"start\": \"14:00\", \"end\": \"17:00\" }\n            ]\n        }\n    ],\n    \"slotDuration\": 20,\n    \"color\": \"#4285F4\",\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T10:00:00.000Z\",\n    \"updatedAt\": \"2023-06-15T10:00:00.000Z\"\n}"
+                },
+                {
+                  "name": "401 - Non authentifié",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/practitioners",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "practitioners"
+                      ]
+                    }
+                  },
+                  "status": "Unauthorized",
+                  "code": 401,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 401,\n    \"message\": \"Non authentifié\",\n    \"error\": \"Unauthorized\"\n}"
+                },
+                {
+                  "name": "400 - Validation échouée",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"firstName\": \"Pierre\",\n    \"lastName\": \"Martin\",\n    \"speciality\": \"INVALID_SPECIALITY\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/practitioners",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "practitioners"
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 400,\n    \"message\": [\"La spécialité doit être une valeur valide\"],\n    \"error\": \"Bad Request\"\n}"
+                }
+              ]
+            },
+            {
+              "name": "Create Appointment",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData && jsonData.id) {",
+                      "    pm.environment.set('appointmentId', jsonData.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"practitionerId\": \"{{practitionerId}}\",\n    \"patientId\": \"{{patientId}}\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"SCHEDULED\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/appointments",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments"
+                  ]
+                },
+                "description": "Crée un nouveau rendez-vous entre un praticien et un patient."
+              },
+              "response": [
+                {
+                  "name": "201 - Créé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"SCHEDULED\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/appointments",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "appointments"
+                      ]
+                    }
+                  },
+                  "status": "Created",
+                  "code": 201,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440200\",\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00.000Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00.000Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"SCHEDULED\",\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T11:00:00.000Z\",\n    \"updatedAt\": \"2023-06-15T11:00:00.000Z\"\n}"
+                },
+                {
+                  "name": "400 - Conflit horaire",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"status\": \"SCHEDULED\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/appointments",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "appointments"
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 400,\n    \"message\": \"Le créneau horaire n'est pas disponible\",\n    \"error\": \"Bad Request\"\n}"
+                },
+                {
+                  "name": "404 - Praticien ou patient non trouvé",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655449999\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"status\": \"SCHEDULED\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/appointments",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "appointments"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 404,\n    \"message\": \"Praticien non trouvé\",\n    \"error\": \"Not Found\"\n}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "✏️ Modification",
+          "item": [
+            {
+              "name": "Cancel Appointment",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{accessToken}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/appointments/{{appointmentId}}/cancel",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "appointments",
+                    "{{appointmentId}}",
+                    "cancel"
+                  ]
+                },
+                "description": "Annule un rendez-vous existant."
+              },
+              "response": [
+                {
+                  "name": "200 - Succès",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/appointments/550e8400-e29b-41d4-a716-446655440200/cancel",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "appointments",
+                        "550e8400-e29b-41d4-a716-446655440200",
+                        "cancel"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"id\": \"550e8400-e29b-41d4-a716-446655440200\",\n    \"practitionerId\": \"550e8400-e29b-41d4-a716-446655440100\",\n    \"patientId\": \"550e8400-e29b-41d4-a716-446655440010\",\n    \"startDateTime\": \"2025-05-15T10:00:00.000Z\",\n    \"endDateTime\": \"2025-05-15T10:20:00.000Z\",\n    \"appointmentType\": \"CONSULTATION\",\n    \"reason\": \"Consultation générale\",\n    \"notes\": \"Patient présentant des symptômes grippaux\",\n    \"status\": \"CANCELLED\",\n    \"cancellationReason\": \"Patient indisponible\",\n    \"cancellationDate\": \"2023-06-15T12:00:00.000Z\",\n    \"tenantId\": \"550e8400-e29b-41d4-a716-446655440001\",\n    \"createdAt\": \"2023-06-15T11:00:00.000Z\",\n    \"updatedAt\": \"2023-06-15T12:00:00.000Z\"\n}"
+                },
+                {
+                  "name": "404 - Rendez-vous non trouvé",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/appointments/550e8400-e29b-41d4-a716-446655449999/cancel",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "appointments",
+                        "550e8400-e29b-41d4-a716-446655449999",
+                        "cancel"
+                      ]
+                    }
+                  },
+                  "status": "Not Found",
+                  "code": 404,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 404,\n    \"message\": \"Rendez-vous non trouvé\",\n    \"error\": \"Not Found\"\n}"
+                },
+                {
+                  "name": "400 - Déjà annulé",
+                  "originalRequest": {
+                    "method": "PATCH",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{accessToken}}"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"cancellationReason\": \"Patient indisponible\",\n    \"notifyPatient\": true\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/appointments/550e8400-e29b-41d4-a716-446655440200/cancel",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "appointments",
+                        "550e8400-e29b-41d4-a716-446655440200",
+                        "cancel"
+                      ]
+                    }
+                  },
+                  "status": "Bad Request",
+                  "code": 400,
+                  "_postman_previewlanguage": "json",
+                  "header": [],
+                  "cookie": [],
+                  "body": "{\n    \"statusCode\": 400,\n    \"message\": \"Ce rendez-vous est déjà annulé\",\n    \"error\": \"Bad Request\"\n}"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🏥 EHR (Electronic Health Records)",
+      "description": "Dossiers médicaux électroniques, consultations et prescriptions",
+      "item": [
+        {
+          "name": "🏥 Consultations",
+          "item": [
+            {
+              "name": "Créer un Encounter",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"motive\": \"Douleurs abdominales et fièvre\",\n    \"exam\": \"Examen physique montre une sensibilité dans la région inférieure droite de l'abdomen. Température: 38.5°C\",\n    \"diagnosis\": \"Appendicite aiguë suspectée\",\n    \"icd10Codes\": [\"K35.80\", \"R10.0\"]\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/encounters",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "encounters"
+                  ]
+                },
+                "description": "Créer un nouveau dossier de consultation (encounter)"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.id) {",
+                      "    pm.environment.set('encounterId', jsonData.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Verrouiller un Encounter",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/encounters/{{encounterId}}/lock",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "encounters",
+                    "{{id}}",
+                    "lock"
+                  ]
+                },
+                "description": "Verrouiller un dossier de consultation pour empêcher des modifications ultérieures"
+              },
+              "response": []
+            },
+            {
+              "name": "Obtenir un Encounter",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/encounters/{{encounterId}}",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "encounters",
+                    "{{id}}"
+                  ]
+                },
+                "description": "Récupérer les détails d'un dossier de consultation spécifique"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "💊 Prescriptions",
+          "item": [
+            {
+              "name": "Créer une prescription",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/pdf",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"medications\": [\n        {\n            \"name\": \"Amoxicilline\",\n            \"dosage\": \"500mg\",\n            \"frequency\": \"3 fois par jour\",\n            \"duration\": \"7 jours\"\n        },\n        {\n            \"name\": \"Paracétamol\",\n            \"dosage\": \"1000mg\",\n            \"frequency\": \"toutes les 6 heures si nécessaire\",\n            \"duration\": \"selon besoin\"\n        }\n    ],\n    \"instructions\": \"Prendre les antibiotiques avec de la nourriture. Revenir si les symptômes persistent après 3 jours.\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/encounters/{{encounterId}}/prescriptions",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "encounters",
+                    "{{id}}",
+                    "prescriptions"
+                  ]
+                },
+                "description": "Générer une prescription pour un encounter spécifique"
+              },
+              "response": [
+                {
+                  "name": "Prescription PDF",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                      },
+                      {
+                        "key": "Accept",
+                        "value": "application/pdf",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"medications\": [\n        {\n            \"name\": \"Amoxicilline\",\n            \"dosage\": \"500mg\",\n            \"frequency\": \"3 fois par jour\",\n            \"duration\": \"7 jours\"\n        },\n        {\n            \"name\": \"Paracétamol\",\n            \"dosage\": \"1000mg\",\n            \"frequency\": \"toutes les 6 heures si nécessaire\",\n            \"duration\": \"selon besoin\"\n        }\n    ],\n    \"instructions\": \"Prendre les antibiotiques avec de la nourriture. Revenir si les symptômes persistent après 3 jours.\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/encounters/{{id}}/prescriptions",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "encounters",
+                        "{{id}}",
+                        "prescriptions"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "pdf",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/pdf"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "JVBERi0xLjMKJcTl8uXrp/Clo..."
+                }
+              ],
+              "event": []
+            }
+          ]
+        },
+        {
+          "name": "🧪 Laboratoire",
+          "item": [
+            {
+              "name": "Créer un rapport de laboratoire",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"patientId\": \"PAT123456\",\n    \"encounterId\": \"{{id}}\",\n    \"testType\": \"Numération Formule Sanguine\",\n    \"results\": [\n        {\n            \"name\": \"Globules blancs\",\n            \"value\": \"12.5\",\n            \"unit\": \"10^9/L\",\n            \"referenceRange\": \"4.0-11.0\",\n            \"flag\": \"H\"\n        },\n        {\n            \"name\": \"Hémoglobine\",\n            \"value\": \"14.2\",\n            \"unit\": \"g/dL\",\n            \"referenceRange\": \"12.0-16.0\",\n            \"flag\": \"N\"\n        },\n        {\n            \"name\": \"Plaquettes\",\n            \"value\": \"250\",\n            \"unit\": \"10^9/L\",\n            \"referenceRange\": \"150-450\",\n            \"flag\": \"N\"\n        }\n    ],\n    \"collectedAt\": \"2023-11-15T09:30:00Z\",\n    \"reportedAt\": \"2023-11-15T14:45:00Z\",\n    \"comments\": \"Leucocytose légère compatible avec un processus inflammatoire/infectieux\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/labs",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "labs"
+                  ]
+                },
+                "description": "Créer un nouveau rapport de laboratoire"
+              },
+              "response": [],
+              "event": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "💰 Billing",
+      "description": "Facturation, tarifs et gestion des paiements",
+      "item": [
+        {
+          "name": "➕ Création",
+          "item": [
+            {
+              "name": "Créer un tarif",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Consultation standard\",\n    \"code\": \"CONS-STD\",\n    \"amount\": 75.00,\n    \"currency\": \"EUR\",\n    \"taxRate\": 0,\n    \"category\": \"MEDICAL_SERVICE\",\n    \"description\": \"Consultation médicale standard de 30 minutes\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/tariffs",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "tariffs"
+                  ]
+                },
+                "description": "Créer un nouveau tarif dans le système de facturation"
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "name": "Créer une facture",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"patientId\": \"PAT123456\",\n    \"encounterId\": \"ENC123456\",\n    \"issueDate\": \"2023-11-15\",\n    \"dueDate\": \"2023-12-15\",\n    \"billingAddress\": {\n        \"line1\": \"123 Rue de la Santé\",\n        \"line2\": \"Appartement 4B\",\n        \"postalCode\": \"75014\",\n        \"city\": \"Paris\",\n        \"country\": \"France\"\n    },\n    \"notes\": \"Facture pour consultation du 15/11/2023\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/invoices",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices"
+                  ]
+                },
+                "description": "Créer une nouvelle facture"
+              },
+              "response": [],
+              "event": []
+            },
+            {
+              "name": "Ajouter une ligne à la facture",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"description\": \"Consultation standard\",\n    \"tariffCode\": \"CONS-STD\",\n    \"quantity\": 1,\n    \"unitPrice\": 75.00,\n    \"taxRate\": 0,\n    \"discountPercentage\": 0\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/{{encounterId}}/lines",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    "{{id}}",
+                    "lines"
+                  ]
+                },
+                "description": "Ajouter une ligne à une facture existante"
+              },
+              "response": [],
+              "event": []
+            }
+          ]
+        },
+        {
+          "name": "✏️ Modification",
+          "item": [
+            {
+              "name": "Envoyer la facture",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"sendMethod\": \"EMAIL\",\n    \"recipientEmail\": \"patient@example.com\",\n    \"includeAttachment\": true,\n    \"message\": \"Veuillez trouver ci-joint votre facture pour la consultation du 15/11/2023.\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/{{encounterId}}/send",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    "{{id}}",
+                    "send"
+                  ]
+                },
+                "description": "Envoyer une facture au patient"
+              },
+              "response": []
+            },
+            {
+              "name": "Marquer la facture comme payée",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"paymentMethod\": \"CARD\",\n    \"amount\": 75.00,\n    \"paymentDate\": \"2023-11-15\",\n    \"transactionId\": \"TRX789012\",\n    \"notes\": \"Paiement par carte bancaire en cabinet\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/invoices/{{encounterId}}/pay",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "invoices",
+                    "{{id}}",
+                    "pay"
+                  ]
+                },
+                "description": "Enregistrer un paiement pour une facture"
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "📖 Consultation",
+          "item": [
+            {
+              "name": "Exporter le journal comptable",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/exports/journal?from=2025-05-01&to=2025-05-31",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "exports",
+                    "journal"
+                  ],
+                  "query": [
+                    {
+                      "key": "from",
+                      "value": "2025-05-01"
+                    },
+                    {
+                      "key": "to",
+                      "value": "2025-05-31"
+                    }
+                  ]
+                },
+                "description": "Exporter le journal comptable pour une période donnée"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📊 Analytics",
+      "description": "Rapports, analyses et tableaux de bord",
+      "item": [
+        {
+          "name": "➕ Création",
+          "item": [
+            {
+              "name": "Générer un rapport",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"type\": \"daily_revenue\",\n    \"params\": {\n        \"date\": \"2025-05-10\"\n    },\n    \"format\": \"PDF\",\n    \"title\": \"Rapport des revenus journaliers\",\n    \"description\": \"Analyse des revenus pour la journée du 10 mai 2025\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/reports",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reports"
+                  ]
+                },
+                "description": "Génère un nouveau rapport basé sur le type et les paramètres spécifiés"
+              },
+              "response": [
+                {
+                  "name": "Génération réussie",
+                  "originalRequest": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      },
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"type\": \"daily_revenue\",\n    \"params\": {\n        \"date\": \"2025-05-10\"\n    },\n    \"format\": \"PDF\",\n    \"title\": \"Rapport des revenus journaliers\",\n    \"description\": \"Analyse des revenus pour la journée du 10 mai 2025\"\n}"
+                    },
+                    "url": {
+                      "raw": "{{baseUrl}}/reports",
+                      "host": [
+                        "{{baseUrl}}"
+                      ],
+                      "path": [
+                        "reports"
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "cookie": [],
+                  "body": "{\n    \"reportId\": \"RPT789012\",\n    \"status\": \"PROCESSING\",\n    \"estimatedCompletionTime\": \"30 seconds\",\n    \"message\": \"Votre rapport est en cours de génération. Vous pouvez le télécharger dès qu'il sera prêt.\"\n}"
+                }
+              ],
+              "event": []
+            },
+            {
+              "name": "Rafraîchir les vues matérialisées",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"views\": [\"revenue_daily\", \"patient_visits_monthly\"],\n    \"force\": false\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/admin/analytics/refresh-materialized-views",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "analytics",
+                    "refresh-materialized-views"
+                  ]
+                },
+                "description": "Rafraîchit les vues matérialisées utilisées pour les rapports (réservé aux SUPERADMIN)"
+              },
+              "response": [],
+              "event": []
+            }
+          ]
+        },
+        {
+          "name": "📖 Consultation",
+          "item": [
+            {
+              "name": "Télécharger un rapport",
+              "request": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{token}}",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/pdf, application/csv",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/reports/{{reportId}}/download",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "reports",
+                    "{{reportId}}",
+                    "download"
+                  ]
+                },
+                "description": "Télécharge un rapport généré précédemment"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🔧 Utilities",
+      "description": "Requêtes utilitaires et de maintenance",
+      "item": [
+        {
+          "name": "🏥 Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "Vérifier l'état de santé de l'API"
+          }
+        },
+        {
+          "name": "📊 API Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": [
+                "{{baseUrl}}"
+              ]
+            },
+            "description": "Informations sur l'API"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script global de pré-requête",
+          "console.log('🚀 Exécution de la requête:', pm.info.requestName);",
+          "",
+          "// Vérifier si on a un token d'accès",
+          "const accessToken = pm.environment.get('accessToken');",
+          "if (!accessToken && !pm.info.requestName.includes('Login')) {",
+          "    console.warn('⚠️ Aucun token d\\'accès trouvé. Exécutez d\\'abord la requête de login.');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Script global de test",
+          "const responseTime = pm.response.responseTime;",
+          "const statusCode = pm.response.code;",
+          "",
+          "console.log(`📊 Réponse: ${statusCode} en ${responseTime}ms`);",
+          "",
+          "// Tests globaux",
+          "pm.test('Temps de réponse acceptable', function () {",
+          "    pm.expect(responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "pm.test('Statut de réponse valide', function () {",
+          "    pm.expect(statusCode).to.be.oneOf([200, 201, 204, 400, 401, 403, 404, 422]);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string",
+      "description": "URL de base de l'API médicale"
+    }
+  ]
+}
