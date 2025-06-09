@@ -111,8 +111,18 @@ export class UsersService {
   }
 
   async findAllSuperadmins(): Promise<User[]> {
+    // Méthode corrigée pour retourner TOUS les utilisateurs pour un SUPERADMIN
+    return this.usersRepository.find({
+      relations: ['tenant'],
+      order: { createdAt: 'DESC' }
+    });
+  }
+
+  async findOnlySuperadmins(): Promise<User[]> {
     return this.usersRepository.find({
       where: { role: AuthUserRole.SUPERADMIN },
+      relations: ['tenant'],
+      order: { createdAt: 'DESC' }
     });
   }
 } 

@@ -21,7 +21,10 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, password: string): Promise<any> {
-    const user = await this.usersRepository.findOne({ where: { email } });
+    const user = await this.usersRepository.findOne({ 
+      where: { email },
+      relations: ['tenant'] // Inclure la relation tenant
+    });
     if (!user) {
       return null;
     }
@@ -141,6 +144,7 @@ export class AuthService {
         role: user.role,
         firstName: user.firstName,
         lastName: user.lastName,
+        tenantId: user.tenantId, // Inclure le tenantId
       },
     };
   }
