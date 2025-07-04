@@ -26,7 +26,7 @@ export class Report {
   @Field()
   name: string;
 
-  @Column({ type: 'jsonb' })
+  @Column({ type: 'json' })
   @Field(() => GraphQLJSON)
   params: Record<string, any>;
 

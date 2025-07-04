@@ -44,6 +44,6 @@ export class WaitQueueEntry {
   createdAt: Date;
 
   @Field({ nullable: true })
-  @Column({ name: 'served_at', type: 'timestamp with time zone', nullable: true })
+  @Column({ name: 'served_at', type: 'timestamp', nullable: true })
   servedAt: Date;
 } 

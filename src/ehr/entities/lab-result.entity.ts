@@ -35,7 +35,7 @@ export class LabResult {
   @Field()
   labName: string;
 
-  @Column('jsonb')
+  @Column('json')
   @Field(() => GraphQLJSON)
   result: Record<string, any>;
 

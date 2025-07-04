@@ -63,7 +63,7 @@ export class Invoice {
   @Field({ nullable: true })
   issueDate: Date;
 
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'json', nullable: true })
   @Field(() => BillingAddress, { nullable: true })
   billingAddress: BillingAddress;
 

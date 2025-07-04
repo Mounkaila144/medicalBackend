@@ -57,7 +57,7 @@ export class Patient {
   email: string;
 
   @Field(() => GraphQLJSON)
-  @Column({ type: 'jsonb' })
+  @Column({ type: 'json' })
   address: any;
 
   @Field()

@@ -198,7 +198,7 @@ type Encounter {
   diagnosis: String
   endAt: DateTime
   exam: String
-  icd10Codes: [String!]!
+  icd10Codes: [String!]
   id: ID!
   labResults: [LabResult!]
   locked: Boolean!
@@ -499,7 +499,7 @@ type ScannedDocument {
   id: String!
   path: String!
   patientId: String!
-  tags: [String!]!
+  tags: [String!]
   uploadedAt: DateTime!
   uploadedBy: String!
 }

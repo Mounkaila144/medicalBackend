@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { PatientsModule } from './patients/patients.module';
@@ -30,7 +30,7 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         // Pour les tests, utiliser SQLite en mémoire si configuré
-        const dbType = configService.get<string>('DATABASE_TYPE') || 'postgres';
+        const dbType = configService.get<string>('DATABASE_TYPE') || configService.get<string>('DB_TYPE') || 'postgres';
         
         if (dbType === 'sqlite') {
           return {
@@ -49,6 +49,29 @@ import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
             synchronize: true,
             logging: configService.get<string>('NODE_ENV') !== 'production',
           };
+        }
+        
+        if (dbType === 'mysql') {
+          return {
+            type: 'mysql',
+            host: configService.get<string>('DATABASE_HOST') || configService.get<string>('DB_HOST', 'localhost'),
+            port: configService.get<number>('DATABASE_PORT') || configService.get<number>('DB_PORT', 3306),
+            username: configService.get<string>('DATABASE_USERNAME') || configService.get<string>('DB_USERNAME', 'root'),
+            password: configService.get<string>('DATABASE_PASSWORD') || configService.get<string>('DB_PASSWORD', ''),
+            database: configService.get<string>('DATABASE_NAME') || configService.get<string>('DB_NAME', 'medical'),
+            entities: [
+              __dirname + '/auth/entities/*.entity{.ts,.js}',
+              __dirname + '/patients/entities/*.entity{.ts,.js}',
+              __dirname + '/scheduling/entities/*.entity{.ts,.js}',
+              __dirname + '/ehr/entities/*.entity{.ts,.js}',
+              __dirname + '/billing/entities/*.entity{.ts,.js}',
+              __dirname + '/inventory/entities/*.entity{.ts,.js}',
+              __dirname + '/hr/entities/*.entity{.ts,.js}',
+              __dirname + '/analytics/entities/*.entity{.ts,.js}',
+            ],
+            synchronize: configService.get<string>('NODE_ENV') !== 'production',
+            logging: configService.get<string>('NODE_ENV') !== 'production',
+          } as TypeOrmModuleOptions;
         }
         
         // Configuration PostgreSQL par défaut

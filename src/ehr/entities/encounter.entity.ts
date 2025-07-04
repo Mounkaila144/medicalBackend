@@ -52,8 +52,8 @@ export class Encounter {
   @Field({ nullable: true })
   diagnosis: string;
 
-  @Column('text', { array: true, default: '{}' })
-  @Field(() => [String], { defaultValue: [] })
+  @Column({ type: 'json', nullable: true })
+  @Field(() => [String], { nullable: true })
   icd10Codes: string[];
 
   @Column({ default: false })

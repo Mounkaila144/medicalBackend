@@ -30,15 +30,23 @@ export class AuditLog {
   @Field()
   column: string;
 
-  @Column('jsonb', { nullable: true })
+  @Column('json', { nullable: true })
   @Field(() => GraphQLJSON, { nullable: true })
   before: Record<string, any>;
 
-  @Column('jsonb')
+  @Column('json')
   @Field(() => GraphQLJSON)
   after: Record<string, any>;
 
   @Column({ name: 'changed_at' })
   @Field()
   changedAt: Date;
+
+  @Column('json', { nullable: true })
+  @Field(() => GraphQLJSON, { nullable: true })
+  details: any;
+
+  @Column('json')
+  @Field(() => GraphQLJSON)
+  changes: any;
 } 

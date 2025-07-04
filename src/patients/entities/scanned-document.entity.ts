@@ -31,8 +31,8 @@ export class ScannedDocument {
   })
   docType: DocumentType;
 
-  @Field(() => [String])
-  @Column('text', { array: true, default: [] })
+  @Field(() => [String], { nullable: true })
+  @Column({ type: 'json', nullable: true })
   tags: string[];
 
   @Field()

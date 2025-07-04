@@ -32,11 +32,11 @@ export class Appointment {
   status: AppointmentStatus;
 
   @Field()
-  @Column({ name: 'start_at', type: 'timestamp with time zone' })
+  @Column({ name: 'start_at', type: 'timestamp' })
   startAt: Date;
 
   @Field()
-  @Column({ name: 'end_at', type: 'timestamp with time zone' })
+  @Column({ name: 'end_at', type: 'timestamp' })
   endAt: Date;
 
   @Field({ nullable: true })
