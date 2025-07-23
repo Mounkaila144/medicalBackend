@@ -1,7 +1,8 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, JoinColumn } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { Encounter } from './encounter.entity';
 import { Practitioner } from '../../scheduling/entities/practitioner.entity';
+import { PrescriptionItem } from './prescription-item.entity';
 
 @ObjectType()
 @Entity('prescriptions')
@@ -37,4 +38,8 @@ export class Prescription {
   @Column({ name: 'expires_at', nullable: true })
   @Field({ nullable: true })
   expiresAt: Date;
+
+  @OneToMany(() => PrescriptionItem, (item) => item.prescription, { cascade: true, eager: true })
+  @Field(() => [PrescriptionItem])
+  items: PrescriptionItem[];
 } 

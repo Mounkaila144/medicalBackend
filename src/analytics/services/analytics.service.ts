@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Report, ReportFormat } from '../entities/report.entity';
 import { GenerateReportDto, ReportType } from '../dto/generate-report.dto';
 import * as fs from 'fs';
@@ -15,6 +15,7 @@ export class AnalyticsService {
     @InjectRepository(Report)
     private reportRepository: Repository<Report>,
     private configService: ConfigService,
+    private dataSource: DataSource,
   ) {}
 
   async generate(tenantId: string, generateReportDto: GenerateReportDto): Promise<Report> {
@@ -224,5 +225,227 @@ export class AnalyticsService {
     // Pour l'instant, ne rien faire car les vues n'existent pas encore
     // TODO: Implémenter une fois les vues matérialisées créées
     console.log('Materialized views refresh skipped - views not yet created');
+  }
+
+  async getDashboardData(tenantId: string, period: string = 'MONTHLY') {
+    try {
+      const today = new Date();
+      const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+
+      // Récupérer les statistiques principales
+      const [
+        totalPatients,
+        todayAppointments,
+        pendingInvoices,
+        monthlyRevenue,
+        appointmentsByStatus,
+        recentAppointments,
+        upcomingAppointments,
+        appointmentsOverview
+      ] = await Promise.all([
+        this.getTotalPatients(tenantId),
+        this.getTodayAppointments(tenantId),
+        this.getPendingInvoices(tenantId),
+        this.getMonthlyRevenue(tenantId),
+        this.getAppointmentsByStatus(tenantId, startOfDay, endOfDay),
+        this.getRecentAppointments(tenantId, 5),
+        this.getUpcomingAppointments(tenantId, startOfDay, endOfDay),
+        this.getAppointmentsOverview(tenantId, period)
+      ]);
+
+      return {
+        period,
+        tenantId,
+        metrics: {
+          totalPatients,
+          totalAppointments: todayAppointments.length,
+          totalRevenue: monthlyRevenue,
+          averageWaitTime: 15
+        },
+        appointmentsByStatus,
+        recentAppointments,
+        upcomingAppointments,
+        appointmentsOverview,
+        pendingInvoices,
+        alerts: await this.getAlerts(tenantId)
+      };
+    } catch (error) {
+      console.error('Error getting dashboard data:', error);
+      throw error;
+    }
+  }
+
+  private async getTotalPatients(tenantId: string): Promise<number> {
+    const result = await this.dataSource.query(`
+      SELECT COUNT(*) as count
+      FROM patients 
+      WHERE clinic_id = ?
+    `, [tenantId]);
+    return parseInt(result[0]?.count || 0);
+  }
+
+  private async getTodayAppointments(tenantId: string): Promise<any[]> {
+    const today = new Date();
+    const startOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endOfDay = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59);
+
+    return await this.dataSource.query(`
+      SELECT a.*, p.first_name as patient_first_name, p.last_name as patient_last_name,
+             pr.first_name as practitioner_first_name, pr.last_name as practitioner_last_name
+      FROM appointments a
+      LEFT JOIN patients p ON a.patient_id = p.id
+      LEFT JOIN practitioners pr ON a.practitioner_id = pr.id
+      WHERE a.tenant_id = ? 
+        AND a.start_at >= ? 
+        AND a.start_at <= ?
+      ORDER BY a.start_at ASC
+    `, [tenantId, startOfDay, endOfDay]);
+  }
+
+  private async getPendingInvoices(tenantId: string): Promise<number> {
+    const result = await this.dataSource.query(`
+      SELECT COUNT(*) as count
+      FROM invoices 
+      WHERE tenant_id = ? AND status = 'PENDING'
+    `, [tenantId]);
+    return parseInt(result[0]?.count || 0);
+  }
+
+  private async getMonthlyRevenue(tenantId: string): Promise<number> {
+    const currentMonth = new Date();
+    const startOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+    const endOfMonth = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+
+    const result = await this.dataSource.query(`
+      SELECT COALESCE(SUM(p.amount), 0) as total
+      FROM payments p
+      JOIN invoices i ON p.invoice_id = i.id
+      WHERE i.tenant_id = ? 
+        AND p.paid_at >= ? 
+        AND p.paid_at <= ?
+    `, [tenantId, startOfMonth, endOfMonth]);
+    return parseFloat(result[0]?.total || 0);
+  }
+
+  private async getAppointmentsByStatus(tenantId: string, startDate: Date, endDate: Date): Promise<any> {
+    const result = await this.dataSource.query(`
+      SELECT status, COUNT(*) as count
+      FROM appointments 
+      WHERE tenant_id = ? 
+        AND start_at >= ? 
+        AND start_at <= ?
+      GROUP BY status
+    `, [tenantId, startDate, endDate]);
+
+    const statusCounts = {
+      BOOKED: 0,
+      CANCELLED: 0,
+      DONE: 0,
+      NO_SHOW: 0
+    };
+
+    result.forEach(row => {
+      if (statusCounts.hasOwnProperty(row.status)) {
+        statusCounts[row.status] = parseInt(row.count);
+      }
+    });
+
+    return statusCounts;
+  }
+
+  private async getRecentAppointments(tenantId: string, limit: number = 5): Promise<any[]> {
+    return await this.dataSource.query(`
+      SELECT a.id, a.status, a.start_at as appointmentDate, a.reason as purpose,
+             CONCAT(p.first_name, ' ', p.last_name) as patientName,
+             CONCAT(pr.first_name, ' ', pr.last_name) as practitionerName
+      FROM appointments a
+      LEFT JOIN patients p ON a.patient_id = p.id
+      LEFT JOIN practitioners pr ON a.practitioner_id = pr.id
+      WHERE a.tenant_id = ?
+      ORDER BY a.start_at DESC
+      LIMIT ?
+    `, [tenantId, limit]);
+  }
+
+  private async getUpcomingAppointments(tenantId: string, startDate: Date, endDate: Date): Promise<any[]> {
+    return await this.dataSource.query(`
+      SELECT a.id, a.start_at as appointmentDate, a.reason as purpose,
+             CONCAT(p.first_name, ' ', p.last_name) as patient,
+             CONCAT(pr.first_name, ' ', pr.last_name) as practitioner,
+             'Consultation' as type
+      FROM appointments a
+      LEFT JOIN patients p ON a.patient_id = p.id
+      LEFT JOIN practitioners pr ON a.practitioner_id = pr.id
+      WHERE a.tenant_id = ? 
+        AND a.start_at >= ? 
+        AND a.start_at <= ?
+        AND a.status IN ('BOOKED')
+      ORDER BY a.start_at ASC
+      LIMIT 10
+    `, [tenantId, startDate, endDate]);
+  }
+
+  private async getAppointmentsOverview(tenantId: string, period: string): Promise<any[]> {
+    const daysBack = period === 'WEEKLY' ? 7 : 30;
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - daysBack);
+
+    return await this.dataSource.query(`
+      SELECT DATE(start_at) as date,
+             SUM(CASE WHEN status = 'BOOKED' THEN 1 ELSE 0 END) as scheduled,
+             SUM(CASE WHEN status = 'DONE' THEN 1 ELSE 0 END) as completed,
+             SUM(CASE WHEN status IN ('CANCELLED', 'NO_SHOW') THEN 1 ELSE 0 END) as canceled
+      FROM appointments 
+      WHERE tenant_id = ? 
+        AND start_at >= ?
+      GROUP BY DATE(start_at)
+      ORDER BY date DESC
+      LIMIT ?
+    `, [tenantId, startDate, daysBack]);
+  }
+
+  private async getAlerts(tenantId: string): Promise<any[]> {
+    const alerts: any[] = [];
+
+    // Vérifier les factures en retard
+    const overdueInvoices = await this.dataSource.query(`
+      SELECT COUNT(*) as count
+      FROM invoices 
+      WHERE tenant_id = ? 
+        AND status = 'PENDING' 
+        AND due_at < CURRENT_DATE
+    `, [tenantId]);
+
+    if (parseInt(overdueInvoices[0]?.count || 0) > 0) {
+      alerts.push({
+        id: 'overdue-invoices',
+        type: 'warning',
+        message: `${overdueInvoices[0].count} facture(s) en retard de paiement`,
+        action: 'Voir les factures'
+      });
+    }
+
+    // Vérifier les nouveaux patients cette semaine
+    const weekStart = new Date();
+    weekStart.setDate(weekStart.getDate() - 7);
+
+    const newPatients = await this.dataSource.query(`
+      SELECT COUNT(*) as count
+      FROM patients 
+      WHERE clinic_id = ? 
+        AND created_at >= ?
+    `, [tenantId, weekStart]);
+
+    if (parseInt(newPatients[0]?.count || 0) > 0) {
+      alerts.push({
+        id: 'new-patients',
+        type: 'info',
+        message: `${newPatients[0].count} nouveau(x) patient(s) cette semaine`,
+        action: 'Voir les patients'
+      });
+    }
+
+    return alerts;
   }
 } 

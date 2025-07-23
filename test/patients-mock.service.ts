@@ -17,7 +17,15 @@ export class PatientsMockService {
       mrn: createPatientDto.mrn || 'MRN' + Math.floor(Math.random() * 10000),
       firstName: createPatientDto.firstName,
       lastName: createPatientDto.lastName,
-      birthDate: createPatientDto.dob,
+      birthDate: (() => {
+        if ((createPatientDto as any).age !== undefined) {
+          const age = (createPatientDto as any).age;
+          const dob = new Date();
+          dob.setFullYear(dob.getFullYear() - age);
+          return dob;
+        }
+        return (createPatientDto as any).dob;
+      })(),
       gender: createPatientDto.gender || Gender.OTHER,
       bloodType: createPatientDto.bloodType,
       phoneNumber: createPatientDto.phone,

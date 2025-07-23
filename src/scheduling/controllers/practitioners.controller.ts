@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Req, Get } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Req, Get, Put, Delete, Param } from '@nestjs/common';
 import { PractitionersService } from '../services/practitioners.service';
 import { CreatePractitionerDto } from '../dto/create-practitioner.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -23,5 +23,28 @@ export class PractitionersController {
   @Get()
   async getAll(@TenantId() tenantId: string) {
     return this.practitionersService.findAll(tenantId);
+  }
+
+  @Get(':id')
+  async getOne(@TenantId() tenantId: string, @Param('id') id: string) {
+    return this.practitionersService.findOne(tenantId, id);
+  }
+
+  @Put(':id')
+  @UseGuards(RolesGuard)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN)
+  async update(
+    @TenantId() tenantId: string, 
+    @Param('id') id: string, 
+    @Body() updatePractitionerDto: Partial<CreatePractitionerDto>
+  ) {
+    return this.practitionersService.update(tenantId, id, updatePractitionerDto);
+  }
+
+  @Delete(':id')
+  @UseGuards(RolesGuard)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN)
+  async delete(@TenantId() tenantId: string, @Param('id') id: string) {
+    return this.practitionersService.delete(tenantId, id);
   }
 } 

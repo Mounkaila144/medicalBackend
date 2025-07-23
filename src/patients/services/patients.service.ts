@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Patient } from '../entities/patient.entity';
 import { CreatePatientDto } from '../dto/create-patient.dto';
 import { UpdatePatientDto } from '../dto/update-patient.dto';
@@ -18,10 +18,26 @@ export class PatientsService {
   ) {}
 
   async create(createPatientDto: CreatePatientDto, tenantId: string): Promise<Patient> {
-    const patient = this.patientsRepository.create({
-      ...createPatientDto,
-      clinicId: tenantId
+    // Convert age to date of birth if age is provided
+    const { age, dob: providedDob, ...patientData } = createPatientDto as any;
+
+    let dob: Date | undefined = providedDob;
+    if (age !== undefined && age !== null) {
+      const derivedDob = new Date();
+      derivedDob.setFullYear(derivedDob.getFullYear() - age);
+      dob = derivedDob;
+    }
+
+    const defaultAddress = { city: 'Niamey' };
+
+    const patient = new Patient();
+    Object.assign(patient, {
+      ...patientData,
+      ...(dob ? { dob } : {}),
+      address: patientData.address ?? defaultAddress,
+      clinicId: tenantId,
     });
+
     const savedPatient = await this.patientsRepository.save(patient);
     
     // Publier un événement patient.created

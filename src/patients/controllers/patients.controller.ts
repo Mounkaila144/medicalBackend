@@ -19,7 +19,7 @@ export class PatientsController {
   ) {}
 
   @Post()
-  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async create(
     @Body() createPatientDto: CreatePatientDto,
     @Req() req,
@@ -39,14 +39,16 @@ export class PatientsController {
   }
 
   @Get()
-  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
-  async findAll(@Req() req): Promise<Patient[]> {
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
+  async findAll(@Req() req, @Query() query: any): Promise<Patient[]> {
     const tenantId = req.user.tenantId;
+    // Handle pagination and filtering parameters
+    const { page, limit, search, sortBy, sortOrder, gender, ...otherParams } = query;
     return this.patientsService.findAll(tenantId);
   }
 
   @Get('search')
-  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async search(
     @Query() searchParams: SearchPatientDto,
     @Req() req
@@ -56,7 +58,7 @@ export class PatientsController {
   }
 
   @Get(':id')
-  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async findOne(
     @Param('id') id: string,
     @Req() req
@@ -66,7 +68,7 @@ export class PatientsController {
   }
 
   @Put(':id')
-  @Roles(AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async update(
     @Param('id') id: string,
     @Body() updatePatientDto: UpdatePatientDto,
@@ -77,7 +79,7 @@ export class PatientsController {
   }
 
   @Delete(':id')
-  @Roles(AuthUserRole.CLINIC_ADMIN)
+  @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN)
   async remove(
     @Param('id') id: string,
     @Req() req

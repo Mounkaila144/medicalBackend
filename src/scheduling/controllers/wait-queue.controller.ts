@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Delete, Param, UseGuards, ParseUUIDPipe } from '@nestjs/common';
 
 import { WaitQueueService } from '../services/wait-queue.service';
 import { WaitQueueEntry } from '../entities/wait-queue-entry.entity';
 import { CreateWaitQueueEntryDto } from '../dto/create-wait-queue-entry.dto';
+import { UpdateWaitQueueEntryDto } from '../dto/update-wait-queue-entry.dto';
 import { TenantId } from '../../common/decorators/tenant-id.decorator';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { TenantGuard } from '../../common/guards/tenant.guard';
@@ -40,5 +41,22 @@ export class WaitQueueController {
     @TenantId() tenantId: string,
   ): Promise<WaitQueueEntry[]> {
     return this.waitQueueService.getQueue(tenantId);
+  }
+
+  @Patch(':id')
+  async updateEntry(
+    @TenantId() tenantId: string,
+    @Param('id', ParseUUIDPipe) entryId: string,
+    @Body() updateData: UpdateWaitQueueEntryDto,
+  ): Promise<WaitQueueEntry> {
+    return this.waitQueueService.updateEntry(tenantId, entryId, updateData);
+  }
+
+  @Delete(':id')
+  async removeEntry(
+    @TenantId() tenantId: string,
+    @Param('id', ParseUUIDPipe) entryId: string,
+  ): Promise<void> {
+    return this.waitQueueService.removeEntry(tenantId, entryId);
   }
 } 

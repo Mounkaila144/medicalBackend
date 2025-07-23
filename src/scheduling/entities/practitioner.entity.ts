@@ -32,6 +32,18 @@ export class Practitioner {
   color: string;
 
   @Field({ nullable: true })
+  @Column({ nullable: true })
+  email: string;
+
+  @Field({ nullable: true })
+  @Column({ name: 'phone_number', nullable: true })
+  phoneNumber: string;
+
+  @Field({ nullable: true })
+  @Column({ name: 'slot_duration', type: 'int', nullable: true, default: 30 })
+  slotDuration: number;
+
+  @Field({ nullable: true })
   @Column({ name: 'user_id', type: 'uuid', nullable: true })
   userId: string;
 

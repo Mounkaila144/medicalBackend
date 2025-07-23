@@ -14,6 +14,8 @@ import { PractitionersService } from './services/practitioners.service';
 
 import { AppointmentsController } from './controllers/appointments.controller';
 import { WaitQueueController } from './controllers/wait-queue.controller';
+import { WaitQueueTestController } from './controllers/wait-queue-test.controller';
+import { TestSimpleController } from './controllers/test-simple.controller';
 import { PractitionersController } from './controllers/practitioners.controller';
 import { PractitionerScheduleController } from './controllers/practitioner-schedule.controller';
 
@@ -41,6 +43,8 @@ import { AuthModule } from '../auth/auth.module';
   controllers: [
     AppointmentsController,
     WaitQueueController,
+    WaitQueueTestController,
+    TestSimpleController,
     PractitionersController,
     PractitionerScheduleController,
   ],

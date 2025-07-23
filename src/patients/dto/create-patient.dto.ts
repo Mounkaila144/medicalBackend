@@ -1,8 +1,8 @@
-import { IsDate, IsEmail, IsEnum, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID } from 'class-validator';
-import { Field, InputType } from '@nestjs/graphql';
+import { IsDate, IsEmail, IsEnum, IsInt, IsNotEmpty, IsObject, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { Gender } from '../entities/patient.entity';
-import { Transform, Type } from 'class-transformer';
 import { GraphQLJSON } from 'graphql-type-json';
+import { Type } from 'class-transformer';
 
 @InputType()
 export class CreatePatientDto {
@@ -11,10 +11,10 @@ export class CreatePatientDto {
   @IsNotEmpty()
   clinicId: string;
 
-  @Field()
+  @Field({ nullable: true })
   @IsString()
-  @IsNotEmpty()
-  mrn: string;
+  @IsOptional()
+  mrn?: string;
 
   @Field()
   @IsString()
@@ -26,11 +26,17 @@ export class CreatePatientDto {
   @IsNotEmpty()
   lastName: string;
 
-  @Field()
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @Min(0)
+  @IsOptional()
+  age?: number;
+
+  @Field({ nullable: true })
   @IsDate()
   @Type(() => Date)
-  @IsNotEmpty()
-  dob: Date;
+  @IsOptional()
+  dob?: Date;
 
   @Field()
   @IsEnum(Gender)
@@ -52,8 +58,8 @@ export class CreatePatientDto {
   @IsOptional()
   email?: string;
 
-  @Field(() => GraphQLJSON)
+  @Field(() => GraphQLJSON, { nullable: true })
   @IsObject()
-  @IsNotEmpty()
-  address: any;
+  @IsOptional()
+  address?: any;
 } 

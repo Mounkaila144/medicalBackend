@@ -39,29 +39,7 @@ export class ReportsController {
   @Get('dashboard')
   @Roles(AuthUserRole.SUPERADMIN, AuthUserRole.CLINIC_ADMIN, AuthUserRole.EMPLOYEE)
   async getDashboardAnalytics(@Query('period') period: string = 'MONTHLY', @Req() req) {
-    // Retourner des données de tableau de bord simulées
-    return {
-      period,
-      tenantId: req.user.tenantId,
-      metrics: {
-        totalPatients: 150,
-        totalAppointments: 89,
-        totalRevenue: 12500.00,
-        averageWaitTime: 15
-      },
-      charts: {
-        dailyRevenue: [
-          { date: '2024-06-01', revenue: 1200 },
-          { date: '2024-06-02', revenue: 1500 },
-          { date: '2024-06-03', revenue: 980 }
-        ],
-        appointmentsByType: [
-          { type: 'CONSULTATION', count: 45 },
-          { type: 'FOLLOW_UP', count: 30 },
-          { type: 'EMERGENCY', count: 14 }
-        ]
-      }
-    };
+    return this.analyticsService.getDashboardData(req.user.tenantId, period);
   }
 
   @Get(':id')

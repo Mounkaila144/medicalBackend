@@ -116,15 +116,16 @@ input CreateMedicalHistoryItemDto {
 }
 
 input CreatePatientDto {
-  address: JSON!
+  address: JSON
+  age: Int
   bloodType: String
   clinicId: String!
-  dob: DateTime!
+  dob: DateTime
   email: String
   firstName: String!
   gender: String!
   lastName: String!
-  mrn: String!
+  mrn: String
   phone: String
 }
 
@@ -377,7 +378,7 @@ type Mutation {
 }
 
 type Patient {
-  address: JSON!
+  address: JSON
   bloodType: String
   clinicId: String!
   createdAt: DateTime!
@@ -419,9 +420,12 @@ type PayrollExportDto {
 
 type Practitioner {
   color: String!
+  email: String
   firstName: String!
   id: String!
   lastName: String!
+  phoneNumber: String
+  slotDuration: Float
   specialty: String!
   tenantId: String!
   userId: String
@@ -431,9 +435,19 @@ type Prescription {
   encounter: Encounter!
   expiresAt: DateTime
   id: ID!
+  items: [PrescriptionItem!]!
   pdfPath: String
   practitioner: Practitioner!
   qr: String
+}
+
+type PrescriptionItem {
+  dosage: String!
+  duration: String
+  frequency: String!
+  id: ID!
+  instructions: String
+  medication: String!
 }
 
 input PrescriptionItemGqlDto {

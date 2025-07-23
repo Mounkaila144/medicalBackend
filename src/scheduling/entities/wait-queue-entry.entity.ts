@@ -1,5 +1,8 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+// TODO: Imports temporairement commentés
+// import { Patient } from '../../patients/entities/patient.entity';
+// import { Practitioner } from '../entities/practitioner.entity';
 
 export enum Priority {
   LOW = 'LOW',
@@ -46,4 +49,15 @@ export class WaitQueueEntry {
   @Field({ nullable: true })
   @Column({ name: 'served_at', type: 'timestamp', nullable: true })
   servedAt: Date;
+
+  // TODO: Relations temporairement commentées pour debug
+  // @Field(() => Patient, { nullable: true })
+  // @ManyToOne(() => Patient, { nullable: true })
+  // @JoinColumn({ name: 'patient_id' })
+  // patient?: Patient;
+
+  // @Field(() => Practitioner, { nullable: true })
+  // @ManyToOne(() => Practitioner, { nullable: true })
+  // @JoinColumn({ name: 'practitioner_id' })
+  // practitioner?: Practitioner;
 } 

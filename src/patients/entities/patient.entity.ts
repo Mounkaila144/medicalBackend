@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, BeforeInsert } from 'typeorm';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { MedicalHistoryItem } from './medical-history-item.entity';
 import { ScannedDocument } from './scanned-document.entity';
@@ -34,7 +34,7 @@ export class Patient {
   lastName: string;
 
   @Field()
-  @Column({ type: 'date' })
+  @Column({ type: 'date', nullable: true })
   dob: Date;
 
   @Field()
@@ -56,9 +56,9 @@ export class Patient {
   @Column({ nullable: true })
   email: string;
 
-  @Field(() => GraphQLJSON)
-  @Column({ type: 'json' })
-  address: any;
+  @Field(() => GraphQLJSON, { nullable: true })
+  @Column({ type: 'json', nullable: true  })
+  address?: any;
 
   @Field()
   @CreateDateColumn({ name: 'created_at' })
@@ -77,4 +77,13 @@ export class Patient {
 
   @OneToMany(() => ScannedDocument, (document) => document.patient)
   documents: ScannedDocument[];
+
+  // Automatically generate an MRN if none is provided
+  @BeforeInsert()
+  private generateMrn() {
+    if (!this.mrn) {
+      // Prefix with 'MRN' followed by a random 8-digit number to reduce collision probability
+      this.mrn = `MRN${Math.floor(10000000 + Math.random() * 90000000)}`;
+    }
+  }
 } 

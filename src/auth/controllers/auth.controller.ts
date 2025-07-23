@@ -61,4 +61,5 @@ export class AuthController {
     const { passwordHash, ...userProfile } = user;
     return userProfile;
   }
+
 } 
