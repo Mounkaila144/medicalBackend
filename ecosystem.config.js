@@ -6,6 +6,7 @@ module.exports = {
       args: 'run start:dev',
       cwd: '/var/www/medicalBackend',
       instances: 1,
+      exec_mode: 'fork',
       autorestart: true,
       watch: ['src'],
       watch_delay: 1000,
