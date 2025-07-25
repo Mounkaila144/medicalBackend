@@ -4,7 +4,7 @@ module.exports = {
       name: 'medical-backend-dev',
       script: 'pnpm',
       args: 'run start:dev',
-      cwd: '/home/medical/medicalBackend',
+      cwd: '/var/www/medicalBackend',
       instances: 1,
       autorestart: true,
       watch: ['src'],
@@ -25,7 +25,7 @@ module.exports = {
     {
       name: 'medical-backend-prod',
       script: 'dist/main.js',
-      cwd: '/home/medical/medicalBackend',
+      cwd: '/var/www/medicalBackend',
       instances: 'max',
       exec_mode: 'cluster',
       autorestart: true,
@@ -58,7 +58,7 @@ module.exports = {
       host: 'localhost',
       ref: 'origin/main',
       repo: 'git@github.com:username/medicalBackend.git',
-      path: '/home/medical/medicalBackend',
+      path: '/var/www/medicalBackend',
       'pre-deploy-local': '',
       'post-deploy': 'pnpm install && pnpm run build && pm2 reload ecosystem.config.js --env production',
       'pre-setup': ''
